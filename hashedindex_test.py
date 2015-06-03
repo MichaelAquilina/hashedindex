@@ -342,11 +342,10 @@ class HashedIndexTest(unittest.TestCase):
         second_index.add_term_occurrence('foo', 'document1.txt')
         second_index.add_term_occurrence('bar', 'document9.txt')
 
-
-        merged_index = hashedindex.HashedIndex.merge(
-            first_index=first_index,
-            second_index=second_index,
-        )
+        merged_index = hashedindex.HashedIndex.merge([
+            first_index,
+            second_index,
+        ])
 
         assert unordered_list_cmp(
             merged_index.terms(), 

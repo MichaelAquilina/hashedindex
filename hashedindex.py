@@ -280,27 +280,24 @@ class HashedIndex(object):
         return data['meta']
 
     @staticmethod
-    def merge(first_index, second_index):
-        assert isinstance(first_index, HashedIndex)
-        assert isinstance(second_index, HashedIndex)
-
+    def merge(index_list):
         result = HashedIndex()
 
-        first_index_terms = set(first_index.terms())
-        second_index_terms = set(second_index.terms())
+        for index in index_list:
+            first_index = result
+            second_index = index
 
-        all_terms = first_index_terms.union(second_index_terms)
-        for term in all_terms:
-            if term in first_index_terms and term in second_index_terms:
-                result._terms[term] = first_index._terms[term] + second_index._terms[term]
-            elif term in first_index_terms:
-                result._terms[term] = first_index._terms[term]
-            elif term in second_index_terms:
-                result._terms[term] = second_index._terms[term]
-            else:
-                raise ValueError("I dont know how the hell you managed to get here")
+            assert isinstance(second_index, HashedIndex)
 
-        result._documents = first_index._documents + second_index._documents
+            for term in second_index.terms():
+                if term in first_index._terms and term in second_index._terms:
+                    result._terms[term] = first_index._terms[term] + second_index._terms[term]
+                elif term in second_index._terms:
+                    result._terms[term] = second_index._terms[term]
+                else:
+                    raise ValueError("I dont know how the hell you managed to get here")
+
+            result._documents = first_index._documents + second_index._documents
 
         return result
 
