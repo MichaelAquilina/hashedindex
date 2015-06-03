@@ -5,6 +5,7 @@ import datetime
 from math import log10
 
 import numpy as np
+import pandas as pd
 
 
 DOCUMENT_DOES_NOT_EXIST = 'The specified document does not exist'
@@ -193,6 +194,13 @@ class HashedIndex(object):
             result.append(self.generate_document_vector(doc, mode))
 
         return np.asmatrix(result)
+
+    def generate_dataframe(self, mode='tfidf'):
+        return pd.DataFrame(
+            data=self.generate_feature_matrix(mode),
+            columns=self.terms(),
+            index=self.documents(),
+        )
 
     def prune(self, min_frequency=2, max_percentile=1.0):
         """
