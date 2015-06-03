@@ -215,22 +215,8 @@ class HashedIndex(object):
         for term in garbage:
             del(self._terms[term])
 
-    def to_dict(self, **kwargs):
-        meta_data = {
-            'data-structure': str(self),
-            'date': '{}'.format(datetime.datetime.now()),
-            'terms': len(self._terms),
-            'documents': len(self._documents),
-        }
-
-        # Store custom Kwargs in the meta-data
-        for key, value in kwargs.items():
-            meta_data[key] = value
-
+    def to_dict(self):
         return {
-            # Store meta-data for analytical purposes
-            'meta': meta_data,
-            # Actual HashedIndex data
             'documents': self._documents,
             'terms': self._terms,
         }
@@ -238,46 +224,6 @@ class HashedIndex(object):
     def from_dict(self, data):
         self._documents = data['documents']
         self._terms = data['terms']
-
-    def save(self, path, compressed=False, **kwargs):
-        """
-        Saves the state of the HashedIndex as a JSON formatted
-        file to the specified path. The optional use of bz2
-        compression is also available. Additional meta data can
-        be stored through the use of kwargs.
-        """
-        import json
-
-        if compressed:
-            import bz2
-            fp = bz2.BZ2File(path, 'w')
-        else:
-            fp = open(path, 'w')
-
-        json.dump(self.to_dict(**kwargs), fp, indent=5)
-        fp.close()
-
-    def load(self, path, compressed=False):
-        """
-        Loads a HashedIndex state from a JSON formatted file that
-        was previously saved. If the file was compressed using bz2,
-        the compressed flag must be set to True.
-        """
-        import json
-
-        if compressed:
-            import bz2
-            fp = bz2.BZ2File(path, mode='r')
-        else:
-            fp = open(path, 'r')
-
-        data = json.load(fp)
-        fp.close()
-
-        self._documents = data['documents']
-        self._terms = data['terms']
-
-        return data['meta']
 
     @staticmethod
     def merge(index_list):
@@ -300,47 +246,3 @@ class HashedIndex(object):
             result._documents = first_index._documents + second_index._documents
 
         return result
-
-
-# Work in progress, there is a related issue in the github bug tracker
-def load_meta(path, compressed=False):
-    """
-    Loads the meta header from a JSON formatted HashedIndex state
-    file that was previously saved. If the file was compressed using
-    bz2, the compressed flag must be set to True. Returns the meta
-    data by itself.
-    """
-    import json
-
-    if compressed:
-        import bz2
-        fp = bz2.BZ2File(path, mode='r')
-    else:
-        fp = open(path, mode='r')
-
-    meta_found = False
-    meta_text = None
-    tags = 0  # Current number of open tags
-
-    while True:
-        text = fp.readline()
-
-        if meta_found:
-            if '{' in text:
-                tags += 1
-
-            if '}' in text:
-                tags -= 1
-
-            if not tags:
-                meta_text += '}'
-                break
-            else:
-                meta_text += text
-        elif '"meta":' in text:
-            meta_found = True
-            tags = 1
-            meta_text = '{\n'
-
-    # Should be valid JSON
-    return json.loads(meta_text)

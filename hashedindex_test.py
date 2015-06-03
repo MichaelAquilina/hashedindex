@@ -1,7 +1,6 @@
 from __future__ import division
 
 import unittest
-import tempfile
 
 import hashedindex
 
@@ -269,16 +268,6 @@ class HashedIndexTest(unittest.TestCase):
         self.assertRaises(ValueError, self.index.generate_feature_matrix, mode='invalid')
         self.assertRaises(ValueError, self.index.generate_feature_matrix, mode=None)
 
-    def test_save_load(self):
-        # Note mktemp is deprecated but this still works
-        path = tempfile.mktemp()
-        self.index.save(path)
-
-        index2 = hashedindex.HashedIndex()
-        index2.load(path)
-
-        assert self.index == index2
-
     def test_prune(self):
         self.index = hashedindex.HashedIndex()  # Fresh Index
 
@@ -298,40 +287,6 @@ class HashedIndexTest(unittest.TestCase):
         self.index.prune(min_frequency=25)
         assert 'word' in self.index.terms()
         assert 'text' not in self.index.terms()
-
-    def test_save_load_compressed(self):
-        path = tempfile.mktemp()
-        self.index.save(path, compressed=True)
-
-        index2 = hashedindex.HashedIndex()
-        index2.load(path, compressed=True)
-
-        assert self.index == index2
-
-    def test_save_load_meta(self):
-        path = tempfile.mktemp()
-        self.index.save(path, comment='Testing Comment', custom={'sometest': [1, 2, 3]})
-
-        index2 = hashedindex.HashedIndex()
-        meta = index2.load(path)
-
-        assert meta['comment'] == 'Testing Comment'
-        assert meta['data-structure'] == str(self.index)
-        assert meta['documents'] == len(self.index._documents)
-        assert meta['terms'] == len(self.index._terms)
-        assert meta['custom'] == {'sometest': [1, 2, 3]}
-
-    def test_save_load_meta_only(self):
-        path = tempfile.mktemp()
-        self.index.save(path, comment='Data', custom={'sometest': [1, 2, 4, 8]})
-
-        meta = hashedindex.load_meta(path)
-
-        assert meta['comment'] == 'Data'
-        assert meta['data-structure'] == str(self.index)
-        assert meta['documents'] == len(self.index.documents())
-        assert meta['terms'] == len(self.index.terms())
-        assert meta['custom'] == {'sometest': [1, 2, 4, 8]}
 
     def test_merge_index(self):
         first_index = hashedindex.HashedIndex()
