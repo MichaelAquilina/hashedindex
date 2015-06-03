@@ -17,6 +17,10 @@ with open('HISTORY.rst') as history_file:
 with open('requirements.txt') as requirements_file:
     requirements = requirements_file.read().split('\n')
 
+test_requirements = [
+    'pytest',
+]
+
 setup(
     name='hashedindex',
     version='0.1.0',
