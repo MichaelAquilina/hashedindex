@@ -268,72 +268,59 @@ class HashedIndexTest(unittest.TestCase):
         self.assertRaises(ValueError, self.index.generate_feature_matrix, mode='invalid')
         self.assertRaises(ValueError, self.index.generate_feature_matrix, mode=None)
 
-    def test_min_prune(self):
-        index = hashedindex.HashedIndex()  # Fresh Index
+
+class PruneIndexTest(unittest.TestCase):
+    def setUp(self):
+        self.index = hashedindex.HashedIndex() 
 
         for i in xrange(100):
-            index.add_term_occurrence('word', 'document{}.txt'.format(i))
+            self.index.add_term_occurrence('word', 'document{}.txt'.format(i))
 
         for i in xrange(20):
-            index.add_term_occurrence('text', 'document{}.txt'.format(i))
+            self.index.add_term_occurrence('text', 'document{}.txt'.format(i))
 
-        index.add_term_occurrence('lonely', 'document2.txt')
+        self.index.add_term_occurrence('lonely', 'document2.txt')
 
-        index.prune(min_value=2)
-        assert unordered_list_cmp(index.terms(), ['word', 'text'])
+    def test_min_prune(self):
+        self.index.prune(min_value=2)
+        assert unordered_list_cmp(self.index.terms(), ['word', 'text'])
 
-        index.prune(min_value=25)
-        assert unordered_list_cmp(index.terms(), ['word'])
+        self.index.prune(min_value=25)
+        assert unordered_list_cmp(self.index.terms(), ['word'])
 
     def test_max_prune(self):
-        index = hashedindex.HashedIndex()  # Fresh Index
-
-        for i in xrange(100):
-            index.add_term_occurrence('word', 'document{}.txt'.format(i))
-
-        for i in xrange(20):
-            index.add_term_occurrence('text', 'document{}.txt'.format(i))
-
-
-        index.prune(max_value=20)
-        assert unordered_list_cmp(index.terms(), ['text'])
+        self.index.prune(max_value=20)
+        assert unordered_list_cmp(self.index.terms(), ['text', 'lonely'])
 
     def test_min_prune_percentile(self):
-        index = hashedindex.HashedIndex()  # Fresh Index
+        self.index.prune(min_value=0.25, use_percentile=True)
+        assert unordered_list_cmp(self.index.terms(), ['word'])
 
-        for i in xrange(100):
-            index.add_term_occurrence('word', 'document{}.txt'.format(i))
+    def test_max_prune_percentile(self):
+        self.index.prune(max_value=0.20, use_percentile=True)
+        assert unordered_list_cmp(self.index.terms(), ['text', 'lonely'])
 
-        for i in xrange(20):
-            index.add_term_occurrence('text', 'document{}.txt'.format(i))
 
-        index.prune(min_value=0.25, use_percentile=True)
-        assert unordered_list_cmp(index.terms(), ['word'])
+class MergeIndexTest(unittest.TestCase):
+    def setUp(self):
+        self.first_index = hashedindex.HashedIndex()
+        self.first_index.add_term_occurrence('foo', 'document2.txt')
+        self.first_index.add_term_occurrence('foo', 'document1.txt')
 
-    def test_min_prune_percentile(self):
-        index = hashedindex.HashedIndex()  # Fresh Index
+        self.second_index = hashedindex.HashedIndex()
+        self.second_index.add_term_occurrence('foo', 'document1.txt')
+        self.second_index.add_term_occurrence('bar', 'document9.txt')
 
-        for i in xrange(100):
-            index.add_term_occurrence('word', 'document{}.txt'.format(i))
+    def test_merge_index_empty(self):
+        assert hashedindex.HashedIndex.merge([]) == hashedindex.HashedIndex()
 
-        for i in xrange(20):
-            index.add_term_occurrence('text', 'document{}.txt'.format(i))
-
-        index.prune(max_value=0.20, use_percentile=True)
-        assert unordered_list_cmp(index.terms(), ['text'])
+    def test_merge_index_single(self):
+        assert hashedindex.HashedIndex.merge([self.first_index]) == self.first_index
 
     def test_merge_index(self):
-        first_index = hashedindex.HashedIndex()
-        first_index.add_term_occurrence('foo', 'document2.txt')
-        first_index.add_term_occurrence('foo', 'document1.txt')
-
-        second_index = hashedindex.HashedIndex()
-        second_index.add_term_occurrence('foo', 'document1.txt')
-        second_index.add_term_occurrence('bar', 'document9.txt')
-
         merged_index = hashedindex.HashedIndex.merge([
-            first_index,
-            second_index,
+            self.first_index,
+            self.second_index,
         ])
 
         assert unordered_list_cmp(
