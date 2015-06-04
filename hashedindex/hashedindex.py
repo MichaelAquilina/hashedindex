@@ -202,22 +202,19 @@ class HashedIndex(object):
             index=self.documents(),
         )
 
-    def prune(self, min_frequency=2, max_percentile=1.0):
-        """
-        Prunes the HashedIndex so that terms under the specified min_frequency
-        will be removed from the index. This method is useful for performing
-        feature selection based on document frequency within the entire corpus.
-        """
-        n = float(len(self._documents))
+    def prune(self, min_value=None, max_value=None, use_percentile=False):
+        n_documents = len(self._documents)
 
         garbage = []
         for term in self.terms():
             freq = self.get_document_frequency(term)
+            if use_percentile:
+                freq /= n_documents
 
-            if freq < min_frequency:
+            if min_value is not None and freq < min_value:
                 garbage.append(term)
 
-            if freq / n > max_percentile:
+            if max_value is not None and freq > max_value:
                 garbage.append(term)
 
         for term in garbage:

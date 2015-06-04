@@ -268,25 +268,59 @@ class HashedIndexTest(unittest.TestCase):
         self.assertRaises(ValueError, self.index.generate_feature_matrix, mode='invalid')
         self.assertRaises(ValueError, self.index.generate_feature_matrix, mode=None)
 
-    def test_prune(self):
-        self.index = hashedindex.HashedIndex()  # Fresh Index
+    def test_min_prune(self):
+        index = hashedindex.HashedIndex()  # Fresh Index
 
         for i in xrange(100):
-            self.index.add_term_occurrence('word', 'document{}.txt'.format(i))
+            index.add_term_occurrence('word', 'document{}.txt'.format(i))
 
         for i in xrange(20):
-            self.index.add_term_occurrence('text', 'document{}.txt'.format(i))
+            index.add_term_occurrence('text', 'document{}.txt'.format(i))
 
-        self.index.add_term_occurrence('lonely', 'document2.txt')
+        index.add_term_occurrence('lonely', 'document2.txt')
 
-        self.index.prune(min_frequency=2)
-        assert 'word' in self.index.terms()
-        assert 'text' in self.index.terms()
-        assert 'lonely' not in self.index.terms()
+        index.prune(min_value=2)
+        assert unordered_list_cmp(index.terms(), ['word', 'text'])
 
-        self.index.prune(min_frequency=25)
-        assert 'word' in self.index.terms()
-        assert 'text' not in self.index.terms()
+        index.prune(min_value=25)
+        assert unordered_list_cmp(index.terms(), ['word'])
+
+    def test_max_prune(self):
+        index = hashedindex.HashedIndex()  # Fresh Index
+
+        for i in xrange(100):
+            index.add_term_occurrence('word', 'document{}.txt'.format(i))
+
+        for i in xrange(20):
+            index.add_term_occurrence('text', 'document{}.txt'.format(i))
+
+
+        index.prune(max_value=20)
+        assert unordered_list_cmp(index.terms(), ['text'])
+
+    def test_min_prune_percentile(self):
+        index = hashedindex.HashedIndex()  # Fresh Index
+
+        for i in xrange(100):
+            index.add_term_occurrence('word', 'document{}.txt'.format(i))
+
+        for i in xrange(20):
+            index.add_term_occurrence('text', 'document{}.txt'.format(i))
+
+        index.prune(min_value=0.25, use_percentile=True)
+        assert unordered_list_cmp(index.terms(), ['word'])
+
+    def test_min_prune_percentile(self):
+        index = hashedindex.HashedIndex()  # Fresh Index
+
+        for i in xrange(100):
+            index.add_term_occurrence('word', 'document{}.txt'.format(i))
+
+        for i in xrange(20):
+            index.add_term_occurrence('text', 'document{}.txt'.format(i))
+
+        index.prune(max_value=0.20, use_percentile=True)
+        assert unordered_list_cmp(index.terms(), ['text'])
 
     def test_merge_index(self):
         first_index = hashedindex.HashedIndex()
