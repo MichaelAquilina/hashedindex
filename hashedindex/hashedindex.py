@@ -205,20 +205,17 @@ class HashedIndex(object):
     def prune(self, min_value=None, max_value=None, use_percentile=False):
         n_documents = len(self._documents)
 
-        garbage = []
         for term in self.terms():
             freq = self.get_document_frequency(term)
             if use_percentile:
                 freq /= n_documents
 
             if min_value is not None and freq < min_value:
-                garbage.append(term)
+                del self._terms[term]
 
             if max_value is not None and freq > max_value:
-                garbage.append(term)
+                del self._terms[term]
 
-        for term in garbage:
-            del(self._terms[term])
 
     def to_dict(self):
         return {
