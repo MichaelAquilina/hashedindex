@@ -312,23 +312,23 @@ class MergeIndexTest(unittest.TestCase):
         self.second_index.add_term_occurrence('bar', 'document9.txt')
 
     def test_merge_index_empty(self):
-        assert hashedindex.HashedIndex.merge([]) == hashedindex.HashedIndex()
+        assert hashedindex.merge([]) == hashedindex.HashedIndex()
 
     def test_merge_index_single(self):
-        assert hashedindex.HashedIndex.merge([self.first_index]) == self.first_index
+        assert hashedindex.merge([self.first_index]) == self.first_index
 
     def test_merge_index(self):
-        merged_index = hashedindex.HashedIndex.merge([
+        merged_index = hashedindex.merge([
             self.first_index,
             self.second_index,
         ])
 
         assert unordered_list_cmp(
-            merged_index.terms(), 
+            merged_index.terms(),
             ['foo', 'bar']
         )
         assert unordered_list_cmp(
-            merged_index.documents(), 
+            merged_index.documents(),
             ['document1.txt', 'document2.txt', 'document9.txt']
         )
 
