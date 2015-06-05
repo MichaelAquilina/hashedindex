@@ -24,7 +24,7 @@ test_requirements = [
 
 setup(
     name='hashedindex',
-    version='0.1.0',
+    version='0.1.2',
     description="InvertedIndex implementation using hash lists (dictionaries)",
     long_description=readme + '\n\n' + history,
     author="Michael Aquilina",
