@@ -3,7 +3,7 @@ from __future__ import absolute_import, division, print_function
 
 __author__ = 'Michael Aquilina'
 __email__ = 'michaelaquilina@gmail.com'
-__version__ = '0.1.2'
+__version__ = '0.1.3'
 
 import collections
 import datetime
