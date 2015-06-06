@@ -1,2 +1,5 @@
 # Python
 *.pyc
+.tox
+dist
+*.egg-info
