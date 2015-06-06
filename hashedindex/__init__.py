@@ -1,5 +1,5 @@
 # -*- encoding: utf8 -*-
-from __future__ import division
+from __future__ import absolute_import, division, print_function
 
 __author__ = 'Michael Aquilina'
 __email__ = 'michaelaquilina@gmail.com'
@@ -131,7 +131,7 @@ class HashedIndex(object):
             raise IndexError(DOCUMENT_DOES_NOT_EXIST)
 
     def terms(self):
-        return self._terms.keys()
+        return list(self._terms)
 
     def documents(self):
         return list(self._documents)
@@ -202,17 +202,20 @@ class HashedIndex(object):
     def prune(self, min_value=None, max_value=None, use_percentile=False):
         n_documents = len(self._documents)
 
+        garbage = []
         for term in self.terms():
             freq = self.get_document_frequency(term)
             if use_percentile:
                 freq /= n_documents
 
             if min_value is not None and freq < min_value:
-                del self._terms[term]
+                garbage.append(term)
 
             if max_value is not None and freq > max_value:
-                del self._terms[term]
+                garbage.append(term)
 
+        for term in garbage:
+            del(self._terms[term])
 
     def to_dict(self):
         return {

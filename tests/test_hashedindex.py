@@ -1,4 +1,5 @@
-from __future__ import division
+# -*- encoding: utf8 -*-
+from __future__ import absolute_import, division, print_function
 
 import unittest
 
@@ -18,16 +19,16 @@ class HashedIndexTest(unittest.TestCase):
     def setUp(self):
         self.index = hashedindex.HashedIndex()
 
-        for i in xrange(3):
+        for i in range(3):
             self.index.add_term_occurrence('word', 'document1.txt')
 
-        for i in xrange(5):
+        for i in range(5):
             self.index.add_term_occurrence('malta', 'document1.txt')
 
-        for i in xrange(4):
+        for i in range(4):
             self.index.add_term_occurrence('phone', 'document2.txt')
 
-        for i in xrange(2):
+        for i in range(2):
             self.index.add_term_occurrence('word', 'document2.txt')
 
     def test_hashedindex_constructor_with_terms(self):
@@ -273,10 +274,10 @@ class PruneIndexTest(unittest.TestCase):
     def setUp(self):
         self.index = hashedindex.HashedIndex() 
 
-        for i in xrange(100):
+        for i in range(100):
             self.index.add_term_occurrence('word', 'document{}.txt'.format(i))
 
-        for i in xrange(20):
+        for i in range(20):
             self.index.add_term_occurrence('text', 'document{}.txt'.format(i))
 
         self.index.add_term_occurrence('lonely', 'document2.txt')
