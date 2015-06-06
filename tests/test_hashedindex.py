@@ -2,7 +2,7 @@ from __future__ import division
 
 import unittest
 
-from hashedindex import hashedindex
+import hashedindex
 
 
 def unordered_list_cmp(list1, list2):
