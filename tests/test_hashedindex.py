@@ -2,6 +2,7 @@
 from __future__ import absolute_import, division, print_function
 
 import collections
+import json
 import unittest
 
 import hashedindex
@@ -274,6 +275,58 @@ class HashedIndexTest(unittest.TestCase):
     def test_generate_feature_matrix_invalid(self):
         self.assertRaises(ValueError, self.index.generate_feature_matrix, mode='invalid')
         self.assertRaises(ValueError, self.index.generate_feature_matrix, mode=None)
+
+
+class SerializationTest(unittest.TestCase):
+    def setUp(self):
+        self.index = hashedindex.HashedIndex()
+
+        for i in range(3):
+            self.index.add_term_occurrence('word', 'document1.txt')
+
+        for i in range(5):
+            self.index.add_term_occurrence('malta', 'document1.txt')
+
+        for i in range(4):
+            self.index.add_term_occurrence('phone', 'document2.txt')
+
+        for i in range(2):
+            self.index.add_term_occurrence('word', 'document2.txt')
+
+    def test_to_dict(self):
+        assert self.index.to_dict() == {
+            'documents': {'document1.txt': 8, 'document2.txt': 6},
+            'terms': {
+                'word': {'document1.txt': 3, 'document2.txt': 2},
+                'malta': {'document1.txt': 5},
+                'phone': {'document2.txt': 4},
+            }
+        }
+
+    def test_from_dict(self):
+        index2 = hashedindex.HashedIndex()
+        index2.from_dict({
+            'documents': {'a': 2, 'b': 3},
+            # Does not test for validity
+            'terms': {
+                'foo': {'a': 20, 'b': 40},
+                'bar': {'a': 65, 'b': 2},
+            }
+        })
+
+        assert unordered_list_cmp(index2.terms(), ['foo', 'bar'])
+        assert unordered_list_cmp(index2.documents(), ['a', 'b'])
+        assert index2.get_documents('foo') == collections.Counter({'a': 20, 'b': 40})
+        assert index2.get_documents('bar') == collections.Counter({'a': 65, 'b': 2})
+
+    def test_integrity(self):
+        index2 = hashedindex.HashedIndex()
+        index2.from_dict(self.index.to_dict())
+
+        assert index2 == self.index
+
+    def test_json_seriazable(self):
+        assert json.dumps(self.index.to_dict())
 
 
 class PruneIndexTest(unittest.TestCase):

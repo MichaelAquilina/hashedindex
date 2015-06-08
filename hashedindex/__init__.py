@@ -234,8 +234,10 @@ class HashedIndex(object):
         }
 
     def from_dict(self, data):
-        self._documents = data['documents']
-        self._terms = data['terms']
+        self._documents = collections.Counter(data['documents'])
+        self._terms = {}
+        for term in data['terms']:
+            self._terms[term] = collections.Counter(data['terms'][term])
 
 
 def merge(index_list):
