@@ -41,7 +41,7 @@ class HashedIndexTest(unittest.TestCase):
         index2 = hashedindex.HashedIndex(self.index.terms())
 
         # Terms between the two indexes should be equal
-        assert index2.terms() == self.index.terms()
+        assert unordered_list_cmp(index2.terms(), self.index.terms())
 
         # No documents should be found
         assert index2.documents() == []
