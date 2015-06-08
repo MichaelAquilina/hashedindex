@@ -7,7 +7,7 @@ __version__ = '0.1.3'
 
 import collections
 import datetime
-from math import log10
+import math
 
 import numpy as np
 
@@ -152,7 +152,7 @@ class HashedIndex(object):
             df = 1 + self.get_document_frequency(term)
             n = 1 + len(self._documents)
 
-            return tf * log10(n / df)
+            return tf * math.log10(n / df)
         else:
             return 0.0
 
