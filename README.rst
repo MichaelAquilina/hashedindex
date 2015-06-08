@@ -75,6 +75,14 @@ The initial idea behind hashedindex is to provide a really quick and easy way of
    classifier = SVC(kernel='linear')
    classifier.fit(X, y)
 
+Optionally, you can extend your feature matrix to a pandas DataFrame:
+
+.. code-block:: python
+
+   import pandas as pd
+   X  = index.generate_feature_matrix(mode='tfidf')
+   df = pd.DataFrame(X, columns=index.terms(), index=index.documents())
+
 All methods within the code have high test coverage so you can be sure everything works as expected. 
 
 Found a bug? Nice, a bug found is a bug fixed. Open an Issue or better yet, open a pull request.
