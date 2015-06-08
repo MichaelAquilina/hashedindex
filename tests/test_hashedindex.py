@@ -1,6 +1,7 @@
 # -*- encoding: utf8 -*-
 from __future__ import absolute_import, division, print_function
 
+import collections
 import unittest
 
 import hashedindex
@@ -30,6 +31,11 @@ class HashedIndexTest(unittest.TestCase):
 
         for i in range(2):
             self.index.add_term_occurrence('word', 'document2.txt')
+
+    def test_get_documents(self):
+        assert self.get_documents('word') == collections.Counter({'document1.txt': 3, 'document2.txt': 2})
+        assert self.get_documents('malta') == collections.Counter({'document1.txt': 5})
+        assert self.get_documents('phone') == collections.Counter({'document2.txt': 4})
 
     def test_hashedindex_constructor_with_terms(self):
         index2 = hashedindex.HashedIndex(self.index.terms())
