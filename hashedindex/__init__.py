@@ -159,8 +159,9 @@ class HashedIndex(object):
         # Speeds up performance by avoiding extra calculations
         if tf != 0.0:
             # Add 1 to document frequency to prevent divide by 0
+            # (Laplacian Correction)
             df = 1 + self.get_document_frequency(term)
-            n = 1 + len(self._documents)
+            n = 2 + len(self._documents)
 
             return tf * math.log10(n / df)
         else:
