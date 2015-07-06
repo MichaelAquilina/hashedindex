@@ -107,10 +107,7 @@ class HashedIndex(object):
         if term not in self._terms:
             raise IndexError(TERM_DOES_NOT_EXIST)
 
-        if document not in self._terms[term]:
-            return 0
-
-        return self._terms[term][document]
+        return self._terms[term].get(document, 0)
 
     def get_document_frequency(self, term):
         """
