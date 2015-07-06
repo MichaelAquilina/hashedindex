@@ -6,10 +6,7 @@ __email__ = 'michaelaquilina@gmail.com'
 __version__ = '0.1.3'
 
 import collections
-import datetime
 import math
-
-import numpy as np
 
 
 DOCUMENT_DOES_NOT_EXIST = 'The specified document does not exist'
@@ -174,17 +171,18 @@ class HashedIndex(object):
         """
         Returns a representation of the specified document as a feature vector
         weighted according the mode specified (by default tf-dif). The result
-        will be returned in the form of a numpy ndarray.
+        will be returned in the form of a list. This can be converted into a numpy
+        array if required using the `np.asarray` method
         Available modes: tfidif, count, tf
         """
-        result = np.zeros(len(self._terms))
-        for i, term in enumerate(self._terms):
+        result = []
+        for term in self._terms:
             if mode == 'tfidf':
-                result[i] = self.get_tfidf(term, doc)
+                result.append(self.get_tfidf(term, doc))
             elif mode == 'count':
-                result[i] = self.get_term_frequency(term, doc)
+                result.append(self.get_term_frequency(term, doc))
             elif mode == 'tf':
-                result[i] = self.get_term_frequency(term, doc) / self.get_document_length(doc)
+                result.append(self.get_term_frequency(term, doc) / self.get_document_length(doc))
             else:
                 raise ValueError('Unexpected mode: %s', mode)
 
@@ -192,20 +190,24 @@ class HashedIndex(object):
 
     def generate_feature_matrix(self, mode='tfidf'):
         """
-        Returns a feature numpy matrix representing the terms and
-        documents in this Inverted Index using the tf-idf weighting
-        scheme by default. The term counts in each document can
-        alternatively be used by specifying scheme='count'
+        Returns a feature matrix in the form of a list of lists which
+        represents the terms and documents in this Inverted Index using
+        the tf-idf weighting by default. The term counts in each
+        document can alternatively be used by specifying scheme='count'
 
         The size of the matrix is equal to m x n where m is
         the number of documents and n is the number of terms.
+
+        The list-of-lists format returned by this function can be very easily
+        converted to a numpy matrix if required using the `np.as_matrix`
+        method.
         """
         result = []
 
-        for i, doc in enumerate(self._documents):
+        for doc in self._documents:
             result.append(self.generate_document_vector(doc, mode))
 
-        return np.asmatrix(result)
+        return result
 
     def prune(self, min_value=None, max_value=None, use_percentile=False):
         n_documents = len(self._documents)

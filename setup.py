@@ -14,7 +14,6 @@ with open('HISTORY.rst') as history_file:
     history = history_file.read().replace('.. :changelog:', '')
 
 requirements  = [
-    'numpy>=1.9.1',
 ]
 
 test_requirements = [

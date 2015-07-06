@@ -34,9 +34,16 @@ class HashedIndexTest(unittest.TestCase):
             self.index.add_term_occurrence('word', 'document2.txt')
 
     def test_get_documents(self):
-        assert self.get_documents('word') == collections.Counter({'document1.txt': 3, 'document2.txt': 2})
-        assert self.get_documents('malta') == collections.Counter({'document1.txt': 5})
-        assert self.get_documents('phone') == collections.Counter({'document2.txt': 4})
+        assert self.index.get_documents('word') == collections.Counter({'document1.txt': 3, 'document2.txt': 2})
+        assert self.index.get_documents('malta') == collections.Counter({'document1.txt': 5})
+        assert self.index.get_documents('phone') == collections.Counter({'document2.txt': 4})
+
+        assert unordered_list_cmp(self.index.documents(), ['document1.txt', 'document2.txt'])
+
+        self.index.add_term_occurrence('test', 'document3.txt')
+        assert unordered_list_cmp(self.index.documents(), ['document1.txt', 'document2.txt', 'document3.txt'])
+
+        assert 'doesnotexist.txt' not in self.index.documents()
 
     def test_hashedindex_constructor_with_terms(self):
         index2 = hashedindex.HashedIndex(self.index.terms())
@@ -174,24 +181,12 @@ class HashedIndexTest(unittest.TestCase):
             'phone': {'document2.txt': 4}
         }
 
-    def test_get_documents(self):
-        assert unordered_list_cmp(self.index.documents(), ['document1.txt', 'document2.txt'])
-
-        self.index.add_term_occurrence('test', 'document3.txt')
-        assert unordered_list_cmp(self.index.documents(), ['document1.txt', 'document2.txt', 'document3.txt'])
-
-        assert 'doesnotexist.txt' not in self.index.documents()
-
     def test_get_tfidf_relation(self):
         # Test Inverse Document Frequency
         self.assertLess(
             self.index.get_tfidf('word', 'document1.txt'),
             self.index.get_tfidf('malta', 'document1.txt')
         )
-
-    def test_get_tfidf_non_negative(self):
-        matrix = self.index.generate_feature_matrix(mode='tfidf')
-        assert (matrix >= 0).all()
 
     def test_get_tfidf_empty_document(self):
         assert self.index.get_tfidf('malta', 'document2.txt') == 0
@@ -200,11 +195,16 @@ class HashedIndexTest(unittest.TestCase):
         assert self.index.get_tfidf('phone', 'document1.txt') == 0
 
     def test_generate_document_vector_default(self):
-        assert (self.index.generate_document_vector('document1.txt') ==
-                self.index.generate_document_vector('document1.txt', mode='tfidf')).all()
+        self.assertListEqual(
+            self.index.generate_document_vector('document1.txt'),
+            self.index.generate_document_vector('document1.txt', mode='tfidf'),
+        )
 
     def test_generate_feature_matrix_default(self):
-        assert (self.index.generate_feature_matrix() == self.index.generate_feature_matrix(mode='tfidf')).all()
+        self.assertListEqual(
+            self.index.generate_feature_matrix(),
+            self.index.generate_feature_matrix(mode='tfidf'),
+        )
 
     def test_generate_feature_matrix_tfidf(self):
         features = self.index.terms()
@@ -212,28 +212,36 @@ class HashedIndexTest(unittest.TestCase):
 
         matrix = self.index.generate_feature_matrix(mode='tfidf')
 
-        assert matrix[instances.index('document1.txt'), features.index('malta')] \
-            == self.index.get_tfidf('malta', 'document1.txt')
+        self.assertEqual(
+            matrix[instances.index('document1.txt')][features.index('malta')],
+            self.index.get_tfidf('malta', 'document1.txt'),
+        )
 
-        assert matrix[instances.index('document2.txt'), features.index('word')] \
-            == self.index.get_tfidf('word', 'document2.txt')
+        self.assertEqual(
+            matrix[instances.index('document2.txt')][features.index('word')],
+            self.index.get_tfidf('word', 'document2.txt'),
+        )
 
-        assert matrix[instances.index('document2.txt'), features.index('phone')] \
-            == self.index.get_tfidf('phone', 'document2.txt')
+        self.assertEqual(
+            matrix[instances.index('document2.txt')][features.index('phone')],
+            self.index.get_tfidf('phone', 'document2.txt'),
+        )
 
-        assert matrix[instances.index('document1.txt'), features.index('word')] \
-            == self.index.get_tfidf('word', 'document1.txt')
+        self.assertEqual(
+            matrix[instances.index('document1.txt')][features.index('word')],
+            self.index.get_tfidf('word', 'document1.txt'),
+        )
 
         # Zero Cases
-        assert matrix[instances.index('document2.txt'), features.index('malta')] == 0
-        assert matrix[instances.index('document1.txt'), features.index('phone')] == 0
+        assert matrix[instances.index('document2.txt')][features.index('malta')] == 0
+        assert matrix[instances.index('document1.txt')][features.index('phone')] == 0
 
     def test_generate_document_vector_count(self):
         features = self.index.terms()
         vector = self.index.generate_document_vector('document1.txt', mode='count')
 
         # Correct vector shape
-        assert vector.shape == (len(features),)
+        assert len(vector) == len(features)
 
         assert vector[features.index('malta')] == 5.0
         assert vector[features.index('word')] == 3.0
@@ -247,17 +255,19 @@ class HashedIndexTest(unittest.TestCase):
         matrix = self.index.generate_feature_matrix(mode='count')
 
         # Correct matrix dimensions
-        assert matrix.shape == (2, 3)
+        assert len(matrix) == 2
+        for row in matrix:
+            assert len(row) == 3
 
         # Ensure this method of addressing data works
-        assert matrix[instances.index('document1.txt'), features.index('malta')] == 5
-        assert matrix[instances.index('document2.txt'), features.index('word')] == 2
-        assert matrix[instances.index('document1.txt'), features.index('word')] == 3
-        assert matrix[instances.index('document2.txt'), features.index('phone')] == 4
+        assert matrix[instances.index('document1.txt')][features.index('malta')] == 5
+        assert matrix[instances.index('document2.txt')][features.index('word')] == 2
+        assert matrix[instances.index('document1.txt')][features.index('word')] == 3
+        assert matrix[instances.index('document2.txt')][features.index('phone')] == 4
 
         # Zero cases
-        assert matrix[instances.index('document2.txt'), features.index('malta')] == 0
-        assert matrix[instances.index('document1.txt'), features.index('phone')] == 0
+        assert matrix[instances.index('document2.txt')][features.index('malta')] == 0
+        assert matrix[instances.index('document1.txt')][features.index('phone')] == 0
 
     def test_generate_feature_matrix_tf(self):
         features = self.index.terms()
@@ -265,12 +275,12 @@ class HashedIndexTest(unittest.TestCase):
 
         matrix = self.index.generate_feature_matrix(mode='tf')
 
-        assert matrix[instances.index('document1.txt'), features.index('word')] == 3 / 8
-        assert matrix[instances.index('document2.txt'), features.index('phone')] == 4 / 6
-        assert matrix[instances.index('document1.txt'), features.index('malta')] == 5 / 8
+        assert matrix[instances.index('document1.txt')][features.index('word')] == 3 / 8
+        assert matrix[instances.index('document2.txt')][features.index('phone')] == 4 / 6
+        assert matrix[instances.index('document1.txt')][features.index('malta')] == 5 / 8
 
-        assert matrix[instances.index('document2.txt'), features.index('malta')] == 0
-        assert matrix[instances.index('document2.txt'), features.index('word')] == 2 / 6
+        assert matrix[instances.index('document2.txt')][features.index('malta')] == 0
+        assert matrix[instances.index('document2.txt')][features.index('word')] == 2 / 6
 
     def test_generate_feature_matrix_invalid(self):
         self.assertRaises(ValueError, self.index.generate_feature_matrix, mode='invalid')
@@ -331,7 +341,7 @@ class SerializationTest(unittest.TestCase):
 
 class PruneIndexTest(unittest.TestCase):
     def setUp(self):
-        self.index = hashedindex.HashedIndex() 
+        self.index = hashedindex.HashedIndex()
 
         for i in range(100):
             self.index.add_term_occurrence('word', 'document{}.txt'.format(i))
