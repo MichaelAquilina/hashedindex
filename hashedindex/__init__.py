@@ -143,10 +143,11 @@ class HashedIndex(object):
     def items(self):
         return self._terms
 
-    def get_tfidf(self, term, document):
+    def get_tfidf(self, term, document, normalized=False):
         """
         Returns the Term-Frequency Inverse-Document-Frequency value for the given
-        term in the specified document.
+        term in the specified document. If normalized is True, term frequency will
+        be divided by the document length.
         """
         tf = self.get_term_frequency(term, document)
 
@@ -157,14 +158,17 @@ class HashedIndex(object):
             df = 1 + self.get_document_frequency(term)
             n = 2 + len(self._documents)
 
+            if normalized:
+                tf /= self.get_document_length(document)
+
             return tf * math.log10(n / df)
         else:
             return 0.0
 
-    def get_total_tfidf(self, term):
+    def get_total_tfidf(self, term, normalized=False):
         result = 0
         for document in self._documents:
-            result += self.get_tfidf(term, document)
+            result += self.get_tfidf(term, document, normalized)
         return result
 
     def generate_document_vector(self, doc, mode='tfidf'):
@@ -183,6 +187,8 @@ class HashedIndex(object):
         for term in self._terms:
             if mode == 'tfidf':
                 result.append(self.get_tfidf(term, doc))
+            elif mode == 'ntfidf':
+                result.append(self.get_tfidf(term, doc, normalized=True))
             elif mode == 'count':
                 result.append(self.get_term_frequency(term, doc))
             elif mode == 'tf':
