@@ -170,9 +170,13 @@ class HashedIndex(object):
     def generate_document_vector(self, doc, mode='tfidf'):
         """
         Returns a representation of the specified document as a feature vector
-        weighted according the mode specified (by default tf-dif). The result
-        will be returned in the form of a list. This can be converted into a numpy
-        array if required using the `np.asarray` method
+        weighted according the mode specified (by default tf-dif).
+
+        A custom weighting function can also be passed which receives the hashedindex
+        instance, the selected term and document as parameters.
+
+        The result will be returned in the form of a list. This can be converted
+        into a numpy array if required using the `np.asarray` method
         Available modes: tfidif, count, tf
         """
         result = []
@@ -183,6 +187,8 @@ class HashedIndex(object):
                 result.append(self.get_term_frequency(term, doc))
             elif mode == 'tf':
                 result.append(self.get_term_frequency(term, doc) / self.get_document_length(doc))
+            elif hasattr(mode, '__call__'):
+                result.append(mode(self, term, doc))
             else:
                 raise ValueError('Unexpected mode: %s', mode)
 
@@ -193,7 +199,10 @@ class HashedIndex(object):
         Returns a feature matrix in the form of a list of lists which
         represents the terms and documents in this Inverted Index using
         the tf-idf weighting by default. The term counts in each
-        document can alternatively be used by specifying scheme='count'
+        document can alternatively be used by specifying scheme='count'.
+
+        A custom weighting function can also be passed which receives a term
+        and document as parameters.
 
         The size of the matrix is equal to m x n where m is
         the number of documents and n is the number of terms.
