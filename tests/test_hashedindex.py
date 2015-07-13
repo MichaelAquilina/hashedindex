@@ -200,14 +200,21 @@ class HashedIndexTest(unittest.TestCase):
             self.index.generate_document_vector('document1.txt', mode='tfidf'),
         )
 
-    # TODO: Really need to improve the way this is tested
-    def test_generate_document_vector_customer_function(self):
+    def test_generate_document_vector_custom_function(self):
         def custom_weighting(index, term, document):
             return index.get_document_length(document)
 
         self.assertListEqual(
             self.index.generate_document_vector('document1.txt', mode=custom_weighting),
-            [8, 8, 8],  # word, malta, phone
+            [8, 8, 8],
+        )
+
+        def custom_weighting_2(index, term, document):
+            return 1.0
+
+        self.assertListEqual(
+            self.index.generate_document_vector('document1.txt', mode=custom_weighting_2),
+            [1.0, 1.0, 1.0],
         )
 
     def test_generate_feature_matrix_default(self):
