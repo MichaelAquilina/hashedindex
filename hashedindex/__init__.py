@@ -6,6 +6,7 @@ __email__ = 'michaelaquilina@gmail.com'
 __version__ = '0.2.2'
 
 import collections
+import functools
 import math
 
 
@@ -94,7 +95,7 @@ class HashedIndex(object):
 
         return sum(self._terms[term].values())
 
-    def get_term_frequency(self, term, document):
+    def get_term_frequency(self, term, document, normalized=False):
         """
         Returns the frequency of the term specified in the document.
         """
@@ -104,7 +105,11 @@ class HashedIndex(object):
         if term not in self._terms:
             raise IndexError(TERM_DOES_NOT_EXIST)
 
-        return self._terms[term].get(document, 0)
+        result = self._terms[term].get(document, 0)
+        if normalized:
+            result /= self.get_document_length(document)
+
+        return result
 
     def get_document_frequency(self, term):
         """
@@ -183,20 +188,22 @@ class HashedIndex(object):
         into a numpy array if required using the `np.asarray` method
         Available modes: tfidif, count, tf
         """
+        if mode == 'tfidf':
+            selected_function = HashedIndex.get_tfidf
+        elif mode == 'ntfidf':
+            selected_function = functools.partial(HashedIndex.get_tfidf, normalized=True)
+        elif mode == 'tf':
+            selected_function = HashedIndex.get_term_frequency
+        elif mode == 'ntf':
+            selected_function = functools.partial(HashedIndex.get_term_frequency, normalized=True)
+        elif hasattr(mode, '__call__'):
+            selected_function = mode
+        else:
+            raise ValueError('Unexpected mode: %s', mode)
+
         result = []
         for term in self._terms:
-            if mode == 'tfidf':
-                result.append(self.get_tfidf(term, doc))
-            elif mode == 'ntfidf':
-                result.append(self.get_tfidf(term, doc, normalized=True))
-            elif mode == 'count':
-                result.append(self.get_term_frequency(term, doc))
-            elif mode == 'tf':
-                result.append(self.get_term_frequency(term, doc) / self.get_document_length(doc))
-            elif hasattr(mode, '__call__'):
-                result.append(mode(self, term, doc))
-            else:
-                raise ValueError('Unexpected mode: %s', mode)
+            result.append(selected_function(self, term, doc))
 
         return result
 

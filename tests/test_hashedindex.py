@@ -248,7 +248,7 @@ class HashedIndexTest(unittest.TestCase):
 
     def test_generate_document_vector_count(self):
         features = self.index.terms()
-        vector = self.index.generate_document_vector('document1.txt', mode='count')
+        vector = self.index.generate_document_vector('document1.txt', mode='tf')
 
         # Correct vector shape
         assert len(vector) == len(features)
@@ -257,12 +257,12 @@ class HashedIndexTest(unittest.TestCase):
         assert vector[features.index('word')] == 3.0
         assert vector[features.index('phone')] == 0.0
 
-    def test_generate_feature_matrix_count(self):
+    def test_generate_feature_matrix_tf(self):
         # Extract the feature and document indices
         features = self.index.terms()
         instances = self.index.documents()
 
-        matrix = self.index.generate_feature_matrix(mode='count')
+        matrix = self.index.generate_feature_matrix(mode='tf')
 
         # Correct matrix dimensions
         assert len(matrix) == 2
@@ -279,11 +279,11 @@ class HashedIndexTest(unittest.TestCase):
         assert matrix[instances.index('document2.txt')][features.index('malta')] == 0
         assert matrix[instances.index('document1.txt')][features.index('phone')] == 0
 
-    def test_generate_feature_matrix_tf(self):
+    def test_generate_feature_matrix_ntf(self):
         features = self.index.terms()
         instances = self.index.documents()
 
-        matrix = self.index.generate_feature_matrix(mode='tf')
+        matrix = self.index.generate_feature_matrix(mode='ntf')
 
         assert matrix[instances.index('document1.txt')][features.index('word')] == 3 / 8
         assert matrix[instances.index('document2.txt')][features.index('phone')] == 4 / 6
