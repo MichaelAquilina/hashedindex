@@ -186,7 +186,11 @@ class HashedIndex(object):
 
         The result will be returned in the form of a list. This can be converted
         into a numpy array if required using the `np.asarray` method
-        Available modes: tfidif, count, tf
+        Available built-in modes:
+          * tfidf: Term Frequency Inverse Document Frequency
+          * ntfidf: Normalized Term Frequency Inverse Document Frequency
+          * tf: Term Frequency
+          * ntf: Normalized Term Frequency
         """
         if mode == 'tfidf':
             selected_function = HashedIndex.get_tfidf
