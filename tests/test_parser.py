@@ -55,8 +55,13 @@ class WordTokenizeTestCase(unittest.TestCase):
 
     def test_sentence(self):
         assert list(textparser.word_tokenize(
-            text='hello cruel world',
-        )) == [('hello', ), ('cruel', ), ('world', )]
+            text='Life is about making an impact, not making an income.',
+        )) == [
+            ('life', ), ('is', ), ('about', ),
+            ('making', ), ('an', ), ('impact', ),
+            ('not', ), ('making', ), ('an', ),
+            ('income', )
+        ]
 
     def test_splits_punctuation(self):
         assert list(textparser.word_tokenize(

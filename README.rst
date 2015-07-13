@@ -51,11 +51,38 @@ The hashedindex is not limited to strings, any hashable object can be indexed.
    index.items()
    {'foo': Counter({10: 1}), ('fire', 'fox'): Counter({90.2: 1})}
 
-The initial idea behind hashedindex is to provide a really quick and easy way of generating matrices for machine learning with
-the additional use of numpy, pandas and scikit-learn. For example:
+Text Parsing
+------------
+
+The hashedindex module comes included with a powerful textparser module with methods to split text into
+tokens.
 
 .. code-block:: python
 
+   from hashedindex import textparser
+   list(textparser.word_tokenize("hello cruel world"))
+   [('hello',), ('cruel',), ('world',)]
+
+Tokens are wrapped within tuples due to the ability to specify any number of n-grams required:
+
+.. code-block:: python
+
+   list(textparser.word_tokenize("Life is about making an impact, not making an income.", ngrams=2))
+   [(u'life', u'is'), (u'is', u'about'), (u'about', u'making'), (u'making', u'an'), (u'an', u'impact'),
+    (u'impact', u'not'), (u'not', u'making'), (u'making', u'an'), (u'an', u'income')]
+
+Take a look at the function's docstring for information on how to use `stopwords`, specify a `min_length` or
+`ignore_numeric` terms.
+
+Integration with Numpy and Pandas
+---------------------------------
+
+The initial idea behind hashedindex is to provide a really quick and easy way of generating matrices for machine
+learning with the additional use of numpy, pandas and scikit-learn. For example:
+
+.. code-block:: python
+
+   from hashedindex import textparser
    import hashedindex
    import numpy as np
 
@@ -64,7 +91,7 @@ the additional use of numpy, pandas and scikit-learn. For example:
    documents = ['spam1.txt', 'ham1.txt', 'spam2.txt']
    for doc in documents:
        with open(doc, 'r') as fp:
-            for term in fp.read().split():
+            for term in textparser.word_tokenize(fp.read()):
                 index.add_term_occurrence(term, doc)
 
    # You *probably* want to use scipy.sparse.csr_matrix for better performance

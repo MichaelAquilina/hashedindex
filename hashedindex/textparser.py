@@ -59,7 +59,7 @@ def get_ngrams(token_list, n=2):
         yield token_list[i:i+n]
 
 
-def word_tokenize(text, stopwords=_stopwords, ngrams=None, min_length=3, ignore_numeric=True):
+def word_tokenize(text, stopwords=_stopwords, ngrams=None, min_length=0, ignore_numeric=True):
     """
     Parses the given text and yields tokens which represent words within
     the given text. Tokens are assumed to be divided by any form of
