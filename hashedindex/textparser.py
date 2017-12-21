@@ -30,12 +30,15 @@ _punctuation = _punctuation.replace('-', '')
 _re_punctuation = re.compile('[%s]' % re.escape(_punctuation))
 _re_token = re.compile(r'[a-z0-9]+')
 
-_url_pattern = r'(https?:\/\/)?(([\da-z-]+)\.){1,2}.([a-z\.]{2,6})(/[\/\w \.-]*)*\/?(\?(\w+=\w+&?)+)?'
+_url_pattern = (
+    r'(https?:\/\/)?(([\da-z-]+)\.){1,2}.([a-z\.]{2,6})(/[\/\w \.-]*)*\/?(\?(\w+=\w+&?)+)?'
+)
 _re_full_url = re.compile(r'^%s$' % _url_pattern)
 _re_url = re.compile(_url_pattern)
 
 
-# Determining the best way to calculate tfidf is proving difficult, might need more advanced techniques
+# Determining the best way to calculate tfidf is proving difficult,
+# might need more advanced techniques
 def tfidf(tf, df, corpus_size):
     if df and tf:
         return (1 + math.log(tf)) * math.log(corpus_size / df)
