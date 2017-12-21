@@ -8,6 +8,8 @@ import unicodedata
 from copy import copy
 from string import ascii_letters, digits, punctuation
 
+import six
+
 
 # Stemmer interface which returns token unchanged
 class NullStemmer(object):
@@ -51,7 +53,7 @@ def normalize_unicode(text):
     Normalize any unicode characters to ascii equivalent
     https://docs.python.org/2/library/unicodedata.html#unicodedata.normalize
     """
-    if type(text) == unicode:
+    if isinstance(text, six.text_type):
         return unicodedata.normalize('NFKD', text).encode('ascii', 'ignore')
     else:
         return text
