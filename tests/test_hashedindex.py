@@ -34,14 +34,18 @@ class HashedIndexTest(unittest.TestCase):
             self.index.add_term_occurrence('word', 'document2.txt')
 
     def test_get_documents(self):
-        assert self.index.get_documents('word') == collections.Counter({'document1.txt': 3, 'document2.txt': 2})
+        assert self.index.get_documents('word') == collections.Counter(
+            {'document1.txt': 3, 'document2.txt': 2}
+        )
         assert self.index.get_documents('malta') == collections.Counter({'document1.txt': 5})
         assert self.index.get_documents('phone') == collections.Counter({'document2.txt': 4})
 
         assert unordered_list_cmp(self.index.documents(), ['document1.txt', 'document2.txt'])
 
         self.index.add_term_occurrence('test', 'document3.txt')
-        assert unordered_list_cmp(self.index.documents(), ['document1.txt', 'document2.txt', 'document3.txt'])
+        assert unordered_list_cmp(
+            self.index.documents(), ['document1.txt', 'document2.txt', 'document3.txt']
+        )
 
         assert 'doesnotexist.txt' not in self.index.documents()
 
@@ -67,7 +71,9 @@ class HashedIndexTest(unittest.TestCase):
         assert self.index.get_term_frequency('word', 'document2.txt') == 2
         assert self.index.get_term_frequency('word', 'Document2.txt') == 1
 
-        assert unordered_list_cmp(self.index.documents(), ['document1.txt', 'document2.txt', 'Document2.txt'])
+        assert unordered_list_cmp(
+            self.index.documents(), ['document1.txt', 'document2.txt', 'Document2.txt']
+        )
 
     def test_getitem(self):
         assert unordered_list_cmp(self.index['word'].keys(), ['document1.txt', 'document2.txt'])
@@ -148,7 +154,9 @@ class HashedIndexTest(unittest.TestCase):
         assert self.index.get_term_frequency('phone', 'document1.txt') == 0
 
     def test_get_term_frequency_exceptions(self):
-        self.assertRaises(IndexError, self.index.get_term_frequency, 'doesnotexist', 'document1.txt')
+        self.assertRaises(
+            IndexError, self.index.get_term_frequency, 'doesnotexist', 'document1.txt'
+        )
         self.assertRaises(IndexError, self.index.get_term_frequency, 'malta', 'deoesnotexist.txt')
 
     def test_get_document_frequency(self):
