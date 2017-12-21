@@ -2,12 +2,7 @@
 hashedindex
 ===============================
 
-.. image:: https://img.shields.io/travis/MichaelAquilina/hashedindex.svg
-        :target: https://travis-ci.org/MichaelAquilina/hashedindex
-
-.. image:: https://img.shields.io/pypi/v/hashedindex.svg
-        :target: https://pypi.python.org/pypi/hashedindex
-
+|TravisCI| |CodeCov| |PyPi|
 
 Fast and simple InvertedIndex implementation using hash lists (python dictionaries).
 
@@ -117,3 +112,12 @@ You can also extend your feature matrix to a more verbose pandas DataFrame:
 All methods within the code have high test coverage so you can be sure everything works as expected.
 
 Found a bug? Nice, a bug found is a bug fixed. Open an Issue or better yet, open a pull request.
+
+.. |TravisCI| image:: https://travis-ci.org/MichaelAquilina/hashedindex.svg?branch=master
+   :target: https://travis-ci.org/MichaelAquilina/hashedindex
+
+.. |PyPi| image:: https://badge.fury.io/py/hashedindex.svg
+   :target: https://badge.fury.io/py/hashedindex
+
+.. |CodeCov| image:: https://codecov.io/gh/MichaelAquilina/hashedindex/branch/master/graph/badge.svg
+   :target: https://codecov.io/gh/MichaelAquilina/hashedindex
