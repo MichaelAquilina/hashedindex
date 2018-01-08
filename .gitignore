@@ -1,5 +1,6 @@
 # Python
 *.pyc
+.*cache
 .tox
 dist
 .venv
