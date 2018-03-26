@@ -50,5 +50,6 @@ setup(
         'Programming Language :: Python :: 3.4',
     ],
     test_suite='tests',
+    setup_requires=['pytest-runner'],
     tests_require=test_requirements
 )
