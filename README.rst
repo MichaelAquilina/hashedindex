@@ -2,7 +2,8 @@
 hashedindex
 ===============================
 
-|TravisCI| |CodeCov| |PyPi|
+|TravisCI| |AppVeyor| |CodeCov| |PyPi|
+
 
 Fast and simple InvertedIndex implementation using hash lists (python dictionaries).
 
@@ -126,6 +127,9 @@ Found a bug? Nice, a bug found is a bug fixed. Open an Issue or better yet, open
 
 .. |TravisCI| image:: https://travis-ci.org/MichaelAquilina/hashedindex.svg?branch=master
    :target: https://travis-ci.org/MichaelAquilina/hashedindex
+
+.. |AppVeyor| image:: https://ci.appveyor.com/api/projects/status/qkhn4bub2pye7skm?svg=true
+   :target: https://ci.appveyor.com/project/MichaelAquilina/hashedindex
 
 .. |PyPi| image:: https://badge.fury.io/py/hashedindex.svg
    :target: https://badge.fury.io/py/hashedindex

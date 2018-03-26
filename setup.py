@@ -14,12 +14,12 @@ with open('HISTORY.rst') as history_file:
     history = history_file.read().replace('.. :changelog:', '')
 
 requirements = [
+    'six',
 ]
 
 test_requirements = [
-    'wheel>=0.23.0',
-    'pytest>=2.7.1',
-    'tox>=2.0.1',
+    'wheel',
+    'pytest',
 ]
 
 setup(
@@ -50,5 +50,6 @@ setup(
         'Programming Language :: Python :: 3.4',
     ],
     test_suite='tests',
+    setup_requires=['pytest-runner'],
     tests_require=test_requirements
 )
