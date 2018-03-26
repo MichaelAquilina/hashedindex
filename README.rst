@@ -9,6 +9,17 @@ Fast and simple InvertedIndex implementation using hash lists (python dictionari
 * Free software: BSD license
 * Documentation: https://hashedindex.readthedocs.org.
 
+
+Installing
+----------
+
+The easiest way to install hashindex is through pypi
+
+::
+
+    pip install hashedindex
+
+
 Features
 --------
 
