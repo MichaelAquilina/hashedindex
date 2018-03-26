@@ -7,8 +7,12 @@ hashedindex
 
 Fast and simple InvertedIndex implementation using hash lists (python dictionaries).
 
-* Free software: BSD license
-* Documentation: https://hashedindex.readthedocs.org.
+Free software: BSD license
+
+* Installing_
+* Features_
+* `Text Parsing`_
+* `Integration with Numpy and Pandas`_
 
 
 Installing
