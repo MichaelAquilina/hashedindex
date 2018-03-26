@@ -7,8 +7,13 @@ hashedindex
 
 Fast and simple InvertedIndex implementation using hash lists (python dictionaries).
 
-* Free software: BSD license
-* Documentation: https://hashedindex.readthedocs.org.
+Free software: BSD license
+
+* Installing_
+* Features_
+* `Text Parsing`_
+* `Integration with Numpy and Pandas`_
+* `Reporting Bugs`_
 
 
 Installing
@@ -24,7 +29,7 @@ The easiest way to install hashindex is through pypi
 Features
 --------
 
-hashedindex provides a simple to use inverted index structure that is flexible enough to work with all kinds of use cases.
+``hashedindex`` provides a simple to use inverted index structure that is flexible enough to work with all kinds of use cases.
 
 Basic Usage:
 
@@ -48,7 +53,7 @@ Basic Usage:
     for term in example.split():
         index.add_term_occurrence(term, 'document2.txt')
 
-The hashedindex is not limited to strings, any hashable object can be indexed.
+``hashedindex`` is not limited to strings, any hashable object can be indexed.
 
 .. code-block:: python
 
@@ -61,8 +66,8 @@ The hashedindex is not limited to strings, any hashable object can be indexed.
 Text Parsing
 ------------
 
-The hashedindex module comes included with a powerful textparser module with methods to split text into
-tokens.
+The ``hashedindex`` module comes included with a powerful textparser module with methods to split
+text into tokens.
 
 .. code-block:: python
 
@@ -78,14 +83,15 @@ Tokens are wrapped within tuples due to the ability to specify any number of n-g
    [(u'life', u'is'), (u'is', u'about'), (u'about', u'making'), (u'making', u'an'), (u'an', u'impact'),
     (u'impact', u'not'), (u'not', u'making'), (u'making', u'an'), (u'an', u'income')]
 
-Take a look at the function's docstring for information on how to use `stopwords`, specify a `min_length` or
-`ignore_numeric` terms.
+Take a look at the function's docstring for information on how to use ``stopwords``, specify a
+``min_length`` or ``ignore_numeric`` terms.
 
 Integration with Numpy and Pandas
 ---------------------------------
 
-The initial idea behind hashedindex is to provide a really quick and easy way of generating matrices for machine
-learning with the additional use of numpy, pandas and scikit-learn. For example:
+The idea behind ``hashedindex`` is to provide a really quick and easy way of generating
+matrices for machine learning with the additional use of numpy, pandas and scikit-learn.
+For example:
 
 .. code-block:: python
 
@@ -122,6 +128,9 @@ You can also extend your feature matrix to a more verbose pandas DataFrame:
    df = pd.DataFrame(X, columns=index.terms(), index=index.documents())
 
 All methods within the code have high test coverage so you can be sure everything works as expected.
+
+Reporting Bugs
+--------------
 
 Found a bug? Nice, a bug found is a bug fixed. Open an Issue or better yet, open a pull request.
 
