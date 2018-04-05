@@ -24,7 +24,7 @@ test_requirements = [
 
 setup(
     name='hashedindex',
-    version='0.4.2',
+    version='0.4.3',
     description="InvertedIndex implementation using hash lists (dictionaries)",
     long_description=readme + '\n\n' + history,
     author="Michael Aquilina",
@@ -48,6 +48,8 @@ setup(
         'Programming Language :: Python :: 2.7',
         'Programming Language :: Python :: 3.3',
         'Programming Language :: Python :: 3.4',
+        'Programming Language :: Python :: 3.5',
+        'Programming Language :: Python :: 3.6',
     ],
     test_suite='tests',
     setup_requires=['pytest-runner'],

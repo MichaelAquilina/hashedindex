@@ -7,6 +7,8 @@ hashedindex
 
 Fast and simple InvertedIndex implementation using hash lists (python dictionaries).
 
+Supports Python 2.7 and Python 3.3+
+
 Free software: BSD license
 
 * Installing_
