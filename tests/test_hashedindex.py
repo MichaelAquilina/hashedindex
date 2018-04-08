@@ -5,6 +5,8 @@ import collections
 import json
 import unittest
 
+import pytest
+
 import hashedindex
 
 
@@ -55,6 +57,11 @@ class HashedIndexTest(unittest.TestCase):
         )
 
         assert 'doesnotexist.txt' not in self.index.documents()
+
+    def test_get_documents_missing_term(self):
+        with pytest.raises(IndexError) as exc:
+            self.index.get_documents('idontexist')
+        assert str(exc.value) == 'The specified term does not exist'
 
     def test_hashedindex_constructor_with_terms(self):
         index2 = hashedindex.HashedIndex(self.index.terms())
