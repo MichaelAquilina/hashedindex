@@ -5,6 +5,8 @@ import collections
 import json
 import unittest
 
+import pytest
+
 import hashedindex
 
 
@@ -33,6 +35,13 @@ class HashedIndexTest(unittest.TestCase):
         for i in range(2):
             self.index.add_term_occurrence('word', 'document2.txt')
 
+    def test_repr(self):
+        index = hashedindex.HashedIndex()
+        assert str(index) == "<HashedIndex: 0 terms, 0 documents>"
+        index.add_term_occurrence('foo', 'doc1.md')
+        index.add_term_occurrence('bar', 'doc1.md')
+        assert str(index) == "<HashedIndex: 2 terms, 1 documents>"
+
     def test_get_documents(self):
         assert self.index.get_documents('word') == collections.Counter(
             {'document1.txt': 3, 'document2.txt': 2}
@@ -48,6 +57,11 @@ class HashedIndexTest(unittest.TestCase):
         )
 
         assert 'doesnotexist.txt' not in self.index.documents()
+
+    def test_get_documents_missing_term(self):
+        with pytest.raises(IndexError) as exc:
+            self.index.get_documents('idontexist')
+        assert str(exc.value) == 'The specified term does not exist'
 
     def test_hashedindex_constructor_with_terms(self):
         index2 = hashedindex.HashedIndex(self.index.terms())
@@ -82,10 +96,14 @@ class HashedIndexTest(unittest.TestCase):
 
     def test_getitem_raises_keyerror(self):
         # Trying to get a term that does not exist should raise a key error
-        self.assertRaises(KeyError, self.index.__getitem__, 'doesnotexist')
+        with pytest.raises(KeyError) as exc:
+            self.index['doesnotexist']
+        assert str(exc.value) == "'doesnotexist'"
 
         # Case Insensitive check
-        self.assertRaises(KeyError, self.index.__getitem__, 'wORd')
+        with pytest.raises(KeyError) as exc:
+            self.index['wORd']
+        assert str(exc.value) == "'wORd'"
 
     def test_contains(self):
         assert 'word' in self.index
@@ -135,12 +153,16 @@ class HashedIndexTest(unittest.TestCase):
         assert self.index.get_total_term_frequency('phone') == 4
 
     def test_get_total_term_frequency_exceptions(self):
-        self.assertRaises(IndexError, self.index.get_total_term_frequency, 'doesnotexist')
+        with pytest.raises(IndexError):
+            self.index.get_total_term_frequency('doesnotexist')
 
     def test_get_total_term_frequency_case(self):
-        self.assertRaises(IndexError, self.index.get_total_term_frequency, 'WORD')
-        self.assertRaises(IndexError, self.index.get_total_term_frequency, 'Malta')
-        self.assertRaises(IndexError, self.index.get_total_term_frequency, 'phonE')
+        with pytest.raises(IndexError):
+            self.index.get_total_term_frequency('WORD')
+        with pytest.raises(IndexError):
+            self.index.get_total_term_frequency('Malta')
+        with pytest.raises(IndexError):
+            self.index.get_total_term_frequency('phonE')
 
     def test_get_term_frequency(self):
         # Check Existing cases
@@ -154,10 +176,10 @@ class HashedIndexTest(unittest.TestCase):
         assert self.index.get_term_frequency('phone', 'document1.txt') == 0
 
     def test_get_term_frequency_exceptions(self):
-        self.assertRaises(
-            IndexError, self.index.get_term_frequency, 'doesnotexist', 'document1.txt'
-        )
-        self.assertRaises(IndexError, self.index.get_term_frequency, 'malta', 'deoesnotexist.txt')
+        with pytest.raises(IndexError):
+            self.index.get_term_frequency('doesnotexist', 'document1.txt')
+        with pytest.raises(IndexError):
+            self.index.get_term_frequency('malta', 'deoesnotexist.txt')
 
     def test_get_document_frequency(self):
         assert self.index.get_document_frequency('word') == 2
@@ -165,14 +187,16 @@ class HashedIndexTest(unittest.TestCase):
         assert self.index.get_document_frequency('phone') == 1
 
     def test_get_document_frequency_exceptions(self):
-        self.assertRaises(IndexError, self.index.get_document_frequency, 'doesnotexist')
+        with pytest.raises(IndexError):
+            self.index.get_document_frequency('doesnotexist')
 
     def test_get_document_length(self):
         assert self.index.get_document_length('document1.txt') == 8
         assert self.index.get_document_length('document2.txt') == 6
 
     def test_get_document_length_exceptions(self):
-        self.assertRaises(IndexError, self.index.get_document_length, 'doesnotexist.txt')
+        with pytest.raises(IndexError):
+            self.index.get_document_length('doesnotexist.txt')
 
     def test_get_terms(self):
         assert unordered_list_cmp(self.index.terms(), ['word', 'malta', 'phone'])
@@ -196,17 +220,31 @@ class HashedIndexTest(unittest.TestCase):
             self.index.get_tfidf('malta', 'document1.txt')
         )
 
+    def test_get_tfidf_relation_normalized(self):
+        self.assertLess(
+            self.index.get_tfidf('word', 'document1.txt', normalized=True),
+            self.index.get_tfidf('malta', 'document1.txt', normalized=True)
+        )
+
     def test_get_tfidf_empty_document(self):
         assert self.index.get_tfidf('malta', 'document2.txt') == 0
 
     def test_get_tfidf_empty_term(self):
         assert self.index.get_tfidf('phone', 'document1.txt') == 0
 
+    def test_get_total_tfidf(self):
+        # Not validated manually, but pinned here to ensure it remains consistent
+        assert self.index.get_total_tfidf('malta') == pytest.approx(1.5051499)
+
     def test_generate_document_vector_default(self):
         self.assertListEqual(
             self.index.generate_document_vector('document1.txt'),
             self.index.generate_document_vector('document1.txt', mode='tfidf'),
         )
+
+    def test_generate_docuemnt_vector_normalized(self):
+        vector = self.index.generate_document_vector('document1.txt', mode='ntfidf')
+        assert len(vector) == 3
 
     def test_generate_document_vector_custom_function(self):
         def custom_weighting(index, term, document):
@@ -308,8 +346,10 @@ class HashedIndexTest(unittest.TestCase):
         assert matrix[instances.index('document2.txt')][features.index('word')] == 2 / 6
 
     def test_generate_feature_matrix_invalid(self):
-        self.assertRaises(ValueError, self.index.generate_feature_matrix, mode='invalid')
-        self.assertRaises(ValueError, self.index.generate_feature_matrix, mode=None)
+        with pytest.raises(ValueError):
+            self.index.generate_feature_matrix(mode='invalid')
+        with pytest.raises(ValueError):
+            self.index.generate_feature_matrix(mode=None)
 
 
 class SerializationTest(unittest.TestCase):

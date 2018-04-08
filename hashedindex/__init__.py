@@ -109,7 +109,7 @@ class HashedIndex(object):
         if normalized:
             result /= self.get_document_length(document)
 
-        return result
+        return float(result)
 
     def get_document_frequency(self, term):
         """
@@ -171,7 +171,7 @@ class HashedIndex(object):
             return 0.0
 
     def get_total_tfidf(self, term, normalized=False):
-        result = 0
+        result = 0.0
         for document in self._documents:
             result += self.get_tfidf(term, document, normalized)
         return result
@@ -280,7 +280,7 @@ def merge(index_list):
                 result._terms[term] = first_index._terms[term] + second_index._terms[term]
             elif term in second_index._terms:
                 result._terms[term] = second_index._terms[term]
-            else:
+            else:  # pragma: nocover
                 raise ValueError("I dont know how the hell you managed to get here")
 
         result._documents = first_index._documents + second_index._documents

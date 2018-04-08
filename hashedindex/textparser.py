@@ -17,7 +17,7 @@ class NullStemmer(object):
     def stem(self, x):
         return x
 
-    def __str__(self):
+    def __repr__(self):
         return '<NullStemmer>'
 
 
@@ -45,7 +45,7 @@ def tfidf(tf, df, corpus_size):
     if df and tf:
         return (1 + math.log(tf)) * math.log(corpus_size / df)
     else:
-        return 0
+        return 0.0
 
 
 def normalize_unicode(text):
@@ -54,7 +54,7 @@ def normalize_unicode(text):
     https://docs.python.org/2/library/unicodedata.html#unicodedata.normalize
     """
     if isinstance(text, six.text_type):
-        return unicodedata.normalize('NFKD', text).encode('ascii', 'ignore')
+        return unicodedata.normalize('NFKD', text).encode('ascii', 'ignore').decode('utf8')
     else:
         return text
 
