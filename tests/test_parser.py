@@ -93,6 +93,16 @@ class WordTokenizeTestCase(unittest.TestCase):
         )) == [('foo', 'bar'), ('bar', 'bomb'), ('bomb', 'blar')]
 
 
+class TestNullStemmer(unittest.TestCase):
+    def test_repr(self):
+        stemmer = textparser.NullStemmer()
+        assert str(stemmer) == repr(stemmer) == '<NullStemmer>'
+
+    def test_stem(self0):
+        stemmer = textparser.NullStemmer()
+        assert stemmer.stem('hello  ') == 'hello  '
+
+
 class NormalizeUnicode(unittest.TestCase):
     def test_empty(self):
         assert textparser.normalize_unicode('') == ''
