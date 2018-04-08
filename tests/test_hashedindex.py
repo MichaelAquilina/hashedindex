@@ -33,6 +33,13 @@ class HashedIndexTest(unittest.TestCase):
         for i in range(2):
             self.index.add_term_occurrence('word', 'document2.txt')
 
+    def test_repr(self):
+        index = hashedindex.HashedIndex()
+        assert str(index) == "<HashedIndex: 0 terms, 0 documents>"
+        index.add_term_occurrence('foo', 'doc1.md')
+        index.add_term_occurrence('bar', 'doc1.md')
+        assert str(index) == "<HashedIndex: 2 terms, 1 documents>"
+
     def test_get_documents(self):
         assert self.index.get_documents('word') == collections.Counter(
             {'document1.txt': 3, 'document2.txt': 2}
