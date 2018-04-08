@@ -96,10 +96,14 @@ class HashedIndexTest(unittest.TestCase):
 
     def test_getitem_raises_keyerror(self):
         # Trying to get a term that does not exist should raise a key error
-        self.assertRaises(KeyError, self.index.__getitem__, 'doesnotexist')
+        with pytest.raises(KeyError) as exc:
+            self.index['doesnotexist']
+        assert str(exc.value) == "'doesnotexist'"
 
         # Case Insensitive check
-        self.assertRaises(KeyError, self.index.__getitem__, 'wORd')
+        with pytest.raises(KeyError) as exc:
+            self.index['wORd']
+        assert str(exc.value) == "'wORd'"
 
     def test_contains(self):
         assert 'word' in self.index
@@ -149,12 +153,16 @@ class HashedIndexTest(unittest.TestCase):
         assert self.index.get_total_term_frequency('phone') == 4
 
     def test_get_total_term_frequency_exceptions(self):
-        self.assertRaises(IndexError, self.index.get_total_term_frequency, 'doesnotexist')
+        with pytest.raises(IndexError):
+            self.index.get_total_term_frequency('doesnotexist')
 
     def test_get_total_term_frequency_case(self):
-        self.assertRaises(IndexError, self.index.get_total_term_frequency, 'WORD')
-        self.assertRaises(IndexError, self.index.get_total_term_frequency, 'Malta')
-        self.assertRaises(IndexError, self.index.get_total_term_frequency, 'phonE')
+        with pytest.raises(IndexError):
+            self.index.get_total_term_frequency('WORD')
+        with pytest.raises(IndexError):
+            self.index.get_total_term_frequency('Malta')
+        with pytest.raises(IndexError):
+            self.index.get_total_term_frequency('phonE')
 
     def test_get_term_frequency(self):
         # Check Existing cases
@@ -168,10 +176,10 @@ class HashedIndexTest(unittest.TestCase):
         assert self.index.get_term_frequency('phone', 'document1.txt') == 0
 
     def test_get_term_frequency_exceptions(self):
-        self.assertRaises(
-            IndexError, self.index.get_term_frequency, 'doesnotexist', 'document1.txt'
-        )
-        self.assertRaises(IndexError, self.index.get_term_frequency, 'malta', 'deoesnotexist.txt')
+        with pytest.raises(IndexError):
+            self.index.get_term_frequency('doesnotexist', 'document1.txt')
+        with pytest.raises(IndexError):
+            self.index.get_term_frequency('malta', 'deoesnotexist.txt')
 
     def test_get_document_frequency(self):
         assert self.index.get_document_frequency('word') == 2
@@ -179,14 +187,16 @@ class HashedIndexTest(unittest.TestCase):
         assert self.index.get_document_frequency('phone') == 1
 
     def test_get_document_frequency_exceptions(self):
-        self.assertRaises(IndexError, self.index.get_document_frequency, 'doesnotexist')
+        with pytest.raises(IndexError):
+            self.index.get_document_frequency('doesnotexist')
 
     def test_get_document_length(self):
         assert self.index.get_document_length('document1.txt') == 8
         assert self.index.get_document_length('document2.txt') == 6
 
     def test_get_document_length_exceptions(self):
-        self.assertRaises(IndexError, self.index.get_document_length, 'doesnotexist.txt')
+        with pytest.raises(IndexError):
+            self.index.get_document_length('doesnotexist.txt')
 
     def test_get_terms(self):
         assert unordered_list_cmp(self.index.terms(), ['word', 'malta', 'phone'])
@@ -322,8 +332,10 @@ class HashedIndexTest(unittest.TestCase):
         assert matrix[instances.index('document2.txt')][features.index('word')] == 2 / 6
 
     def test_generate_feature_matrix_invalid(self):
-        self.assertRaises(ValueError, self.index.generate_feature_matrix, mode='invalid')
-        self.assertRaises(ValueError, self.index.generate_feature_matrix, mode=None)
+        with pytest.raises(ValueError):
+            self.index.generate_feature_matrix(mode='invalid')
+        with pytest.raises(ValueError):
+            self.index.generate_feature_matrix(mode=None)
 
 
 class SerializationTest(unittest.TestCase):
