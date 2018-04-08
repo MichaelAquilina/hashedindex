@@ -109,7 +109,7 @@ class HashedIndex(object):
         if normalized:
             result /= self.get_document_length(document)
 
-        return result
+        return float(result)
 
     def get_document_frequency(self, term):
         """
