@@ -220,11 +220,21 @@ class HashedIndexTest(unittest.TestCase):
             self.index.get_tfidf('malta', 'document1.txt')
         )
 
+    def test_get_tfidf_relation_normalized(self):
+        self.assertLess(
+            self.index.get_tfidf('word', 'document1.txt', normalized=True),
+            self.index.get_tfidf('malta', 'document1.txt', normalized=True)
+        )
+
     def test_get_tfidf_empty_document(self):
         assert self.index.get_tfidf('malta', 'document2.txt') == 0
 
     def test_get_tfidf_empty_term(self):
         assert self.index.get_tfidf('phone', 'document1.txt') == 0
+
+    def test_get_total_tfidf(self):
+        # Not validated manually, but pinned here to ensure it remains consistent
+        assert self.index.get_total_tfidf('malta') == pytest.approx(1.5051499)
 
     def test_generate_document_vector_default(self):
         self.assertListEqual(
