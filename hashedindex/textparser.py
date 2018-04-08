@@ -45,7 +45,7 @@ def tfidf(tf, df, corpus_size):
     if df and tf:
         return (1 + math.log(tf)) * math.log(corpus_size / df)
     else:
-        return 0
+        return 0.0
 
 
 def normalize_unicode(text):

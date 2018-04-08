@@ -242,6 +242,12 @@ class HashedIndexTest(unittest.TestCase):
             self.index.generate_document_vector('document1.txt', mode='tfidf'),
         )
 
+    def test_generate_docuemnt_vector_normalized(self):
+        vector = self.index.generate_document_vector('document1.txt', mode='ntfidf')
+        assert vector[0] > 0.0
+        assert vector[1] > 0.0
+        assert vector[2] == 0.0
+
     def test_generate_document_vector_custom_function(self):
         def custom_weighting(index, term, document):
             return index.get_document_length(document)

@@ -171,7 +171,7 @@ class HashedIndex(object):
             return 0.0
 
     def get_total_tfidf(self, term, normalized=False):
-        result = 0
+        result = 0.0
         for document in self._documents:
             result += self.get_tfidf(term, document, normalized)
         return result
