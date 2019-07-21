@@ -1,6 +1,6 @@
 __author__ = 'Michael Aquilina'
 __email__ = 'michaelaquilina@gmail.com'
-__version__ = '0.4.4'
+__version__ = '0.5.0'
 
 import collections
 import functools
