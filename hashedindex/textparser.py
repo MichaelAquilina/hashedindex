@@ -1,6 +1,3 @@
-# -*- encoding: utf8 -*-
-from __future__ import unicode_literals, print_function, division
-
 import re
 import math
 import unicodedata
@@ -8,11 +5,9 @@ import unicodedata
 from copy import copy
 from string import ascii_letters, digits, punctuation
 
-import six
-
 
 # Stemmer interface which returns token unchanged
-class NullStemmer(object):
+class NullStemmer:
 
     def stem(self, x):
         return x
@@ -53,7 +48,7 @@ def normalize_unicode(text):
     Normalize any unicode characters to ascii equivalent
     https://docs.python.org/2/library/unicodedata.html#unicodedata.normalize
     """
-    if isinstance(text, six.text_type):
+    if isinstance(text, str):
         return unicodedata.normalize('NFKD', text).encode('ascii', 'ignore').decode('utf8')
     else:
         return text

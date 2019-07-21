@@ -1,9 +1,6 @@
-# -*- encoding: utf8 -*-
-from __future__ import absolute_import, division, print_function
-
 __author__ = 'Michael Aquilina'
 __email__ = 'michaelaquilina@gmail.com'
-__version__ = '0.4.4'
+__version__ = '0.5.0'
 
 import collections
 import functools
@@ -14,7 +11,7 @@ DOCUMENT_DOES_NOT_EXIST = 'The specified document does not exist'
 TERM_DOES_NOT_EXIST = 'The specified term does not exist'
 
 
-class HashedIndex(object):
+class HashedIndex:
     """
     InvertedIndex structure in the form of a hash list implementation.
     """
