@@ -66,8 +66,6 @@ def get_ngrams(token_list, n=2):
 
 
 def validate_stemmer(stemmer):
-    if not isinstance(stemmer, object):
-        raise InvalidStemmerException()
     if not hasattr(stemmer, 'stem'):
         raise InvalidStemmerException()
     if not callable(stemmer.stem):
