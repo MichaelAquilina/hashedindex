@@ -75,7 +75,8 @@ def word_tokenize(text, stopwords=_stopwords, ngrams=None, min_length=0, ignore_
     """
     Parses the given text and yields tokens which represent words within
     the given text. Tokens are assumed to be divided by any form of
-    whitespace character.
+    whitespace character.  A stemmer may optionally be provided, which will
+    apply a transformation to each token.
     """
     if ngrams is None:
         ngrams = 1
