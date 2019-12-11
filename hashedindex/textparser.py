@@ -16,6 +16,10 @@ class NullStemmer:
         return '<NullStemmer>'
 
 
+class InvalidStemmerException(Exception):
+    pass
+
+
 _stopwords = frozenset()
 _accepted = frozenset(ascii_letters + digits + punctuation) - frozenset('\'')
 
@@ -59,14 +63,27 @@ def get_ngrams(token_list, n=2):
         yield token_list[i:i+n]
 
 
-def word_tokenize(text, stopwords=_stopwords, ngrams=None, min_length=0, ignore_numeric=True):
+def validate_stemmer(stemmer):
+    if not hasattr(stemmer, 'stem'):
+        raise InvalidStemmerException('Stemmer is missing a "stem" function')
+    if not callable(stemmer.stem):
+        raise InvalidStemmerException('Stemmer has a "stem" attribute but it is not a function')
+
+
+def word_tokenize(text, stopwords=_stopwords, ngrams=None, min_length=0, ignore_numeric=True,
+                  stemmer=None):
     """
     Parses the given text and yields tokens which represent words within
     the given text. Tokens are assumed to be divided by any form of
-    whitespace character.
+    whitespace character.  A stemmer may optionally be provided, which will
+    apply a transformation to each token.
     """
     if ngrams is None:
         ngrams = 1
+    if stemmer is None:
+        stemmer = NullStemmer()
+
+    validate_stemmer(stemmer)
 
     text = re.sub(re.compile('\'s'), '', text)  # Simple heuristic
     text = re.sub(_re_punctuation, '', text)
@@ -75,6 +92,7 @@ def word_tokenize(text, stopwords=_stopwords, ngrams=None, min_length=0, ignore_
     for tokens in get_ngrams(matched_tokens, ngrams):
         for i in range(len(tokens)):
             tokens[i] = tokens[i].strip(punctuation)
+            tokens[i] = stemmer.stem(tokens[i])
 
             if len(tokens[i]) < min_length or tokens[i] in stopwords:
                 break

@@ -14,6 +14,7 @@ Free software: BSD license
 * Installing_
 * Features_
 * `Text Parsing`_
+* `Stemming`_
 * `Integration with Numpy and Pandas`_
 * `Reporting Bugs`_
 
@@ -87,6 +88,25 @@ Tokens are wrapped within tuples due to the ability to specify any number of n-g
 
 Take a look at the function's docstring for information on how to use ``stopwords``, specify a
 ``min_length`` or ``ignore_numeric`` terms.
+
+Stemming
+--------
+
+When building an inverted index, it can be useful to resolve related strings to a common root.
+
+For example, in a corpus relating to animals it might be useful to derive a singular noun for each animal; as a result, documents containing either the word `dog` or `dogs` could be found under the index entry `dog`.
+
+The `hashedindex` module's text parser provides optional support for stemming by allowing the caller to specify a custom stemmer:
+
+.. code-block:: python
+
+   class NaivePluralStemmer():
+       def stem(self, x):
+           return x.rstrip('s')
+
+   list(textparser.word_tokenize('It was raining cats and dogs', stemmer=NaivePluralStemmer()))
+   [('it',), ('wa',), ('raining',), ('cat',), ('and',), ('dog',)]
+
 
 Integration with Numpy and Pandas
 ---------------------------------

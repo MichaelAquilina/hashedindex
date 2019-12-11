@@ -15,6 +15,43 @@ class TfidfTestCase(unittest.TestCase):
         assert textparser.tfidf(tf=10, df=0, corpus_size=1) == 0
 
 
+class ValidateStemmerTestCase(unittest.TestCase):
+
+    class EmptyStemmer(object):
+
+        def stem(self, x):
+            return ''
+
+    def test_null_stemmer(self):
+        stemmer = textparser.NullStemmer()
+        textparser.validate_stemmer(stemmer)
+
+    def test_empty_stemmer(self):
+        stemmer = self.EmptyStemmer()
+        textparser.validate_stemmer(stemmer)
+
+    def test_stemmer_constant(self):
+        kwargs = {'stemmer': 'string'}
+        exception = textparser.InvalidStemmerException
+        self.assertRaises(exception, textparser.validate_stemmer, **kwargs)
+
+    def test_stemmer_function(self):
+        kwargs = {'stemmer': lambda: None}
+        exception = textparser.InvalidStemmerException
+        self.assertRaises(exception, textparser.validate_stemmer, **kwargs)
+
+    def test_stemmer_missing_stem_attribute(self):
+        kwargs = {'stemmer': object()}
+        exception = textparser.InvalidStemmerException
+        self.assertRaises(exception, textparser.validate_stemmer, **kwargs)
+
+    def test_stemmer_stem_not_callable(self):
+        stemmer = type('', (object,), {'stem': None})()
+        kwargs = {'stemmer': stemmer}
+        exception = textparser.InvalidStemmerException
+        self.assertRaises(exception, textparser.validate_stemmer, **kwargs)
+
+
 class IsNumericTestCase(unittest.TestCase):
 
     def test_integer(self):
@@ -52,6 +89,11 @@ class GetNGramsTestCase(unittest.TestCase):
 
 
 class WordTokenizeTestCase(unittest.TestCase):
+
+    class NaivePluralStemmer(object):
+
+        def stem(self, x):
+            return x.rstrip('s')
 
     def test_sentence(self):
         assert list(textparser.word_tokenize(
@@ -91,6 +133,12 @@ class WordTokenizeTestCase(unittest.TestCase):
             text='foo bar bomb blar',
             ngrams=2,
         )) == [('foo', 'bar'), ('bar', 'bomb'), ('bomb', 'blar')]
+
+    def test_stemming(self):
+        assert list(textparser.word_tokenize(
+            text='one examples',
+            stemmer=self.NaivePluralStemmer()
+        )) == [('one',), ('example',)]
 
 
 class TestNullStemmer(unittest.TestCase):
