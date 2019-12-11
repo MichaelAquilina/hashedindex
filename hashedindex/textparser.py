@@ -17,9 +17,7 @@ class NullStemmer:
 
 
 class InvalidStemmerException(Exception):
-
-    def __init__(self):
-        super().__init__('Stemmer must be an object with a stem(str) function')
+    pass
 
 
 _stopwords = frozenset()
@@ -67,9 +65,9 @@ def get_ngrams(token_list, n=2):
 
 def validate_stemmer(stemmer):
     if not hasattr(stemmer, 'stem'):
-        raise InvalidStemmerException()
+        raise InvalidStemmerException('Stemmer is missing a "stem" function')
     if not callable(stemmer.stem):
-        raise InvalidStemmerException()
+        raise InvalidStemmerException('Stemmer has a "stem" attribute but it is not a function')
 
 
 def word_tokenize(text, stopwords=_stopwords, ngrams=None, min_length=0, ignore_numeric=True,
