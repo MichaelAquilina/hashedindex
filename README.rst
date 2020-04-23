@@ -94,7 +94,7 @@ Stemming
 
 When building an inverted index, it can be useful to resolve related strings to a common root.
 
-For example, in a corpus relating to animals it might be useful to derive a singular noun for each animal; as a result, documents containing either the word `dog` or `dogs` could be found under the index entry `dog`.
+For example, in a corpus relating to animals it might be useful to derive a singular noun for each animal; as a result, documents containing either the word ``dog`` or ``dogs`` could be found under the index entry ``dog``.
 
 The `hashedindex` module's text parser provides optional support for stemming by allowing the caller to specify a custom stemmer:
 
