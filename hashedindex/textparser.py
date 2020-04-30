@@ -102,7 +102,6 @@ def word_tokenize(text, stopwords=_stopwords, ngrams=None, min_length=0, ignore_
     matched_tokens = match_tokens(text)
     for tokens in get_ngrams(matched_tokens, ngrams):
         for i in range(len(tokens)):
-            tokens[i] = tokens[i].strip(punctuation)
             tokens[i] = stemmer.stem(tokens[i])
 
             if len(tokens[i]) < min_length or tokens[i] in stopwords:
