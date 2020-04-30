@@ -134,6 +134,7 @@ class WordTokenizeTestCase(unittest.TestCase):
     def test_tokenize_whitespace(self):
         assert list(textparser.word_tokenize(
             text='around   the world',
+            tokenize_whitespace=True
         )) == [('around',), (' ',), ('the',), (' ',), ('world', )]
 
     def test_ngrams(self):

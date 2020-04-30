@@ -58,9 +58,13 @@ def normalize_unicode(text):
         return text
 
 
-def match_tokens(text):
+def match_tokens(text, tokenize_whitespace):
+    first = True
     for token in re.findall(_re_token, text):
+        if tokenize_whitespace and not first:
+            yield ' '
         yield token
+        first = False
 
 
 def get_ngrams(tokens, n=2):
@@ -83,7 +87,7 @@ def validate_stemmer(stemmer):
 
 
 def word_tokenize(text, stopwords=_stopwords, ngrams=None, min_length=0, ignore_numeric=True,
-                  stemmer=None, retain_casing=False):
+                  stemmer=None, retain_casing=False, tokenize_whitespace=False):
     """
     Parses the given text and yields tokens which represent words within
     the given text. Tokens are assumed to be divided by any form of
@@ -107,7 +111,7 @@ def word_tokenize(text, stopwords=_stopwords, ngrams=None, min_length=0, ignore_
     text = re.sub(_re_punctuation, '', text)
     text = text if retain_casing else text.lower()
 
-    matched_tokens = match_tokens(text)
+    matched_tokens = match_tokens(text, tokenize_whitespace)
     for tokens in get_ngrams(matched_tokens, ngrams):
         candidate = tuple()
         for token in tokens:
