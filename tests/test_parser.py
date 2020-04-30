@@ -125,6 +125,11 @@ class WordTokenizeTestCase(unittest.TestCase):
             text='one two 3 four',
         )) == [('one', ), ('two', ), ('four', )]
 
+    def test_retains_casing(self):
+        assert list(textparser.word_tokenize(
+            text='Three letter acronym (TLA)',
+        )) == [('Three', ), ('letter', ), ('acronym', ), ('TLA',)]
+
     def test_ngrams(self):
         assert list(textparser.word_tokenize(
             text='foo bar bomb blar',
