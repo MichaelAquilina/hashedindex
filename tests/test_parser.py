@@ -1,3 +1,4 @@
+import re
 import unittest
 
 from hashedindex import textparser
@@ -68,6 +69,19 @@ class IsNumericTestCase(unittest.TestCase):
         assert not textparser.isnumeric('10 foo')
 
 
+class TokenRegexTestCase(unittest.TestCase):
+
+    def test_plain_text(self):
+        text = 'one two three four'
+        tokens = re.findall(textparser._re_token, text)
+        assert tokens == ['one', 'two', 'three', 'four']
+
+    def test_punctuated_text(self):
+        text = 'one, two (three) four'
+        tokens = re.findall(textparser._re_token, text)
+        assert tokens == ['one', ',', 'two', '(', 'three', ')', 'four']
+
+
 class GetNGramsTestCase(unittest.TestCase):
 
     def test_bigram_token_list(self):
@@ -130,6 +144,11 @@ class WordTokenizeTestCase(unittest.TestCase):
             text='Three letter acronym (TLA)',
             retain_casing=True
         )) == [('Three', ), ('letter', ), ('acronym', ), ('TLA',)]
+
+    def test_retains_punctuation(self):
+        assert list(textparser.word_tokenize(
+            text='who, where? (question)',
+        )) == [('who', ), (',', ), ('where',), ('?', ), ('(',), ('question',), (')',)]
 
     def test_ngrams(self):
         assert list(textparser.word_tokenize(
