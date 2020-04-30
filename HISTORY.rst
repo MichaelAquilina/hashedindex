@@ -3,6 +3,10 @@
 History
 -------
 
+0.7.1 (2019-04-30)
+--------------------
+* Fix minor issue in history changelog
+
 0.7.0 (2019-04-30)
 --------------------
 * Add support for retaining token casing in ``word_tokenize`` (Thanks @jayadison)
