@@ -135,7 +135,7 @@ class WordTokenizeTestCase(unittest.TestCase):
         assert list(textparser.word_tokenize(
             text='around   the world',
             tokenize_whitespace=True
-        )) == [('around',), (' ',), ('the',), (' ',), ('world', )]
+        )) == [('around',), ('   ',), ('the',), (' ',), ('world', )]
 
     def test_ngrams(self):
         assert list(textparser.word_tokenize(
