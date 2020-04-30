@@ -59,12 +59,20 @@ def normalize_unicode(text):
 
 
 def match_tokens(text):
-    return re.findall(_re_token, text)
+    for token in re.findall(_re_token, text):
+        yield token
 
 
 def get_ngrams(tokens, n=2):
-    for i in range(len(tokens) - n + 1):
-        yield tokens[i:i+n]
+    ngram = []
+    for _ in range(0, n):
+        token = next(tokens)
+        ngram.append(token)
+    yield ngram
+    for token in tokens:
+        ngram = ngram[1:]
+        ngram.append(token)
+        yield ngram
 
 
 def validate_stemmer(stemmer):

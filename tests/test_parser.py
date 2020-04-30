@@ -72,12 +72,12 @@ class GetNGramsTestCase(unittest.TestCase):
 
     def test_bigram_tokens(self):
         assert list(textparser.get_ngrams(
-            tokens=['one', 'two', 'three', 'four'],
+            tokens=iter(['one', 'two', 'three', 'four']),
         )) == [['one', 'two'], ['two', 'three'], ['three', 'four']]
 
     def test_trigram_tokens(self):
         assert list(textparser.get_ngrams(
-            tokens=['one', 'two', 'three', 'four'],
+            tokens=iter(['one', 'two', 'three', 'four']),
             n=3,
         )) == [
             ['one', 'two', 'three'],
