@@ -130,6 +130,12 @@ class WordTokenizeTestCase(unittest.TestCase):
             text='first. second',
         )) == [('first', ), ('second', )]
 
+    def test_retain_inner_punctuation(self):
+        assert list(textparser.word_tokenize(
+            text='decision is a and/or b',
+            retain_punctuation=True
+        )) == [('decision',), ('is',), ('a',), ('and/or',), ('b',)]
+
     def test_ignores_stopwords(self):
         assert list(textparser.word_tokenize(
             text='The first rule of python is',
