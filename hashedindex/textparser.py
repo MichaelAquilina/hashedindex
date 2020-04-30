@@ -27,9 +27,10 @@ _punctuation = copy(punctuation)
 _punctuation = _punctuation.replace('\\', '')
 _punctuation = _punctuation.replace('/', '')
 _punctuation = _punctuation.replace('-', '')
+_punctuation_class = '[%s]' % re.escape(_punctuation)
 
-_re_punctuation = re.compile('[%s]' % re.escape(_punctuation))
-_re_token = re.compile(r'[A-z0-9]+|\S')
+_re_punctuation = re.compile(_punctuation_class)
+_re_token = re.compile(r'[A-z0-9]+|%s' % _punctuation_class)
 
 _url_pattern = (
     r'(https?:\/\/)?(([\da-z-]+)\.){1,2}.([a-z\.]{2,6})(/[\/\w \.-]*)*\/?(\?(\w+=\w+&?)+)?'
