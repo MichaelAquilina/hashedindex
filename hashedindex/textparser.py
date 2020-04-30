@@ -29,7 +29,7 @@ _punctuation = _punctuation.replace('/', '')
 _punctuation = _punctuation.replace('-', '')
 
 _re_punctuation = re.compile('[%s]' % re.escape(_punctuation))
-_re_token = re.compile(r'[a-z0-9]+')
+_re_token = re.compile(r'[A-z0-9]+')
 
 _url_pattern = (
     r'(https?:\/\/)?(([\da-z-]+)\.){1,2}.([a-z\.]{2,6})(/[\/\w \.-]*)*\/?(\?(\w+=\w+&?)+)?'
@@ -71,12 +71,18 @@ def validate_stemmer(stemmer):
 
 
 def word_tokenize(text, stopwords=_stopwords, ngrams=None, min_length=0, ignore_numeric=True,
-                  stemmer=None):
+                  stemmer=None, retain_casing=False):
     """
     Parses the given text and yields tokens which represent words within
     the given text. Tokens are assumed to be divided by any form of
     whitespace character.  A stemmer may optionally be provided, which will
     apply a transformation to each token.
+
+    The tokenizer ignores numeric tokens by default; the ignore_numeric
+    parameter can be set to False to include them in the output stream.
+
+    Generated tokens are lowercased by default; the retain_casing flag can
+    be set to True to retain upper/lower casing from the original text.
     """
     if ngrams is None:
         ngrams = 1
@@ -87,8 +93,9 @@ def word_tokenize(text, stopwords=_stopwords, ngrams=None, min_length=0, ignore_
 
     text = re.sub(re.compile('\'s'), '', text)  # Simple heuristic
     text = re.sub(_re_punctuation, '', text)
+    text = text if retain_casing else text.lower()
 
-    matched_tokens = re.findall(_re_token, text.lower())
+    matched_tokens = re.findall(_re_token, text)
     for tokens in get_ngrams(matched_tokens, ngrams):
         for i in range(len(tokens)):
             tokens[i] = tokens[i].strip(punctuation)
