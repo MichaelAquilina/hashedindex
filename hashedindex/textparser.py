@@ -88,8 +88,8 @@ def word_tokenize(text, stopwords=_stopwords, ngrams=None, min_length=0, ignore_
     Generated tokens are lowercased by default; the retain_casing flag can
     be set to True to retain upper/lower casing from the original text.
 
-    When retain_punctuation is set to False (default), punctuation characters
-    are removed from the input text.
+    Punctuation characters are removed from the input text by default;
+    the retain_punctuation flag can be set to True to retain them.
     """
     if ngrams is None:
         ngrams = 1
