@@ -1,4 +1,3 @@
-import re
 import unittest
 
 from hashedindex import textparser
@@ -67,19 +66,6 @@ class IsNumericTestCase(unittest.TestCase):
     def test_no_numeric(self):
         assert not textparser.isnumeric('foo')
         assert not textparser.isnumeric('10 foo')
-
-
-class TokenRegexTestCase(unittest.TestCase):
-
-    def test_plain_text(self):
-        text = 'one two three four'
-        tokens = re.findall(textparser._re_token, text)
-        assert tokens == ['one', 'two', 'three', 'four']
-
-    def test_punctuated_text(self):
-        text = 'one, two (three) four'
-        tokens = re.findall(textparser._re_token, text)
-        assert tokens == ['one', ',', 'two', '(', 'three', ')', 'four']
 
 
 class GetNGramsTestCase(unittest.TestCase):
