@@ -98,6 +98,15 @@ class GetNGramsTestCase(unittest.TestCase):
             ['two', 'three', 'four'],
         ]
 
+    def test_trigram_punctuation_token_list(self):
+        assert list(textparser.get_ngrams(
+            token_list=['!', '@', '#', '$'],
+            n=3,
+        )) == [
+            ['!', '@', '#'],
+            ['@', '#', '$'],
+        ]
+
 
 class WordTokenizeTestCase(unittest.TestCase):
 
