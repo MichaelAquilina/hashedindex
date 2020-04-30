@@ -29,7 +29,7 @@ _punctuation = _punctuation.replace('/', '')
 _punctuation = _punctuation.replace('-', '')
 
 _re_punctuation = re.compile('[%s]' % re.escape(_punctuation))
-_re_token = re.compile(r'[A-z0-9]+')
+_re_token = re.compile(r'[A-z0-9]+|\s+')
 
 _url_pattern = (
     r'(https?:\/\/)?(([\da-z-]+)\.){1,2}.([a-z\.]{2,6})(/[\/\w \.-]*)*\/?(\?(\w+=\w+&?)+)?'
@@ -59,12 +59,9 @@ def normalize_unicode(text):
 
 
 def match_tokens(text, tokenize_whitespace):
-    first = True
     for token in re.findall(_re_token, text):
-        if tokenize_whitespace and not first:
-            yield ' '
-        yield token
-        first = False
+        if token.strip() or tokenize_whitespace:
+            yield token
 
 
 def get_ngrams(token_list, n=2):
