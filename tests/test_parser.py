@@ -133,7 +133,6 @@ class WordTokenizeTestCase(unittest.TestCase):
     def test_retain_inner_punctuation(self):
         assert list(textparser.word_tokenize(
             text='decision is a and/or b',
-            retain_punctuation=True
         )) == [('decision',), ('is',), ('a',), ('and/or',), ('b',)]
 
     def test_ignores_stopwords(self):
