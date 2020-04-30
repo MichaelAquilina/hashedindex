@@ -23,14 +23,16 @@ class InvalidStemmerException(Exception):
 _stopwords = frozenset()
 _accepted = frozenset(ascii_letters + digits + punctuation) - frozenset('\'')
 
+# Permit certain characters within punctuation
+_punctuation_exceptions = '\\/-'
 _punctuation = copy(punctuation)
-_punctuation = _punctuation.replace('\\', '')
-_punctuation = _punctuation.replace('/', '')
-_punctuation = _punctuation.replace('-', '')
+_punctuation.strip(_punctuation_exceptions)
+
+_token_class = '[A-z0-9%s]' % re.escape(_punctuation_exceptions)
 _punctuation_class = '[%s]' % re.escape(_punctuation)
 
 _re_punctuation = re.compile(_punctuation_class)
-_re_token = re.compile(r'[A-z0-9]+|%s' % _punctuation_class)
+_re_token = re.compile(r'%s+|%s' % (_token_class, _punctuation_class))
 
 _url_pattern = (
     r'(https?:\/\/)?(([\da-z-]+)\.){1,2}.([a-z\.]{2,6})(/[\/\w \.-]*)*\/?(\?(\w+=\w+&?)+)?'
@@ -102,8 +104,7 @@ def word_tokenize(text, stopwords=_stopwords, ngrams=None, min_length=0, ignore_
     matched_tokens = re.findall(_re_token, text)
     for tokens in get_ngrams(matched_tokens, ngrams):
         for i in range(len(tokens)):
-            if not retain_punctuation:
-                tokens[i] = tokens[i].strip(punctuation)
+            tokens[i] = tokens[i] if retain_punctuation else re.sub(_re_punctuation, '', tokens[i])
             tokens[i] = stemmer.stem(tokens[i])
 
             if len(tokens[i]) < min_length or tokens[i] in stopwords:
