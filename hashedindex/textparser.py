@@ -116,17 +116,17 @@ def word_tokenize(text, stopwords=_stopwords, ngrams=None, min_length=0, ignore_
     text = text if retain_casing else text.lower()
 
     matched_tokens = match_tokens(text, tokenize_whitespace)
-    for tokens in get_ngrams(matched_tokens, ngrams):
-        candidate = tuple()
-        for token in tokens:
+    for ngram in get_ngrams(matched_tokens, ngrams):
+        output_token = tuple()
+        for token in ngram:
             token = stemmer.stem(token)
             if len(token) < min_length or token in stopwords:
                 break
             if ignore_numeric and isnumeric(token):
                 break
-            candidate += (token,)
+            output_token += (token,)
         else:
-            yield candidate
+            yield output_token
 
 
 def isnumeric(text):
