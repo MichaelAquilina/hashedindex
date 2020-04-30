@@ -128,6 +128,7 @@ class WordTokenizeTestCase(unittest.TestCase):
     def test_retains_casing(self):
         assert list(textparser.word_tokenize(
             text='Three letter acronym (TLA)',
+            retain_casing=True
         )) == [('Three', ), ('letter', ), ('acronym', ), ('TLA',)]
 
     def test_ngrams(self):
