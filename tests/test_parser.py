@@ -160,6 +160,12 @@ class WordTokenizeTestCase(unittest.TestCase):
             retain_punctuation=True
         )) == [('who', ), (',', ), ('where',), ('?', ), ('(',), ('question',), ('!',), (')',)]
 
+    def test_inner_punctuation(self):
+        assert list(textparser.word_tokenize(
+            text='is the oven pre-heated?',
+            retain_punctuation=True
+        )) == [('is', ), ('the', ), ('oven',), ('pre-heated', ), ('?',)]
+
     def test_ngrams(self):
         assert list(textparser.word_tokenize(
             text='foo bar bomb blar',
