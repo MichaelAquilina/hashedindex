@@ -86,7 +86,7 @@ Tokens are wrapped within tuples due to the ability to specify any number of n-g
    [(u'life', u'is'), (u'is', u'about'), (u'about', u'making'), (u'making', u'an'), (u'an', u'impact'),
     (u'impact', u'not'), (u'not', u'making'), (u'making', u'an'), (u'an', u'income')]
 
-Take a look at the function's docstring for information on how to use ``stopwords``, specify a ``min_length`` for tokens, and configure token output using the ``ignore_numeric`` and ``retain_casing`` parameters.
+Take a look at the function's docstring for information on how to use ``stopwords``, specify a ``min_length`` for tokens, and configure token output using the ``ignore_numeric``, ``retain_casing`` and ``tokenize_whitespace`` parameters.
 
 Stemming
 --------
