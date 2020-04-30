@@ -131,6 +131,11 @@ class WordTokenizeTestCase(unittest.TestCase):
             retain_casing=True
         )) == [('Three', ), ('letter', ), ('acronym', ), ('TLA',)]
 
+    def test_tokenize_whitespace(self):
+        assert list(textparser.word_tokenize(
+            text='around   the world',
+        )) == [('around',), (' ',), ('the',), (' ',), ('world', )]
+
     def test_ngrams(self):
         assert list(textparser.word_tokenize(
             text='foo bar bomb blar',
