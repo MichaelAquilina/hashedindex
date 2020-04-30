@@ -68,10 +68,10 @@ def get_ngrams(token_list, n=2):
     tokens = iter(token_list)
     try:
         ngram = [next(tokens) for _ in range(0, n)]
+        yield ngram
     except StopIteration:
         return
 
-    yield ngram
     for token in tokens:
         ngram = ngram[1:]
         ngram.append(token)
