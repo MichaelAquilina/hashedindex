@@ -62,9 +62,9 @@ def match_tokens(text):
     return re.findall(_re_token, text)
 
 
-def get_ngrams(token_list, n=2):
-    for i in range(len(token_list) - n + 1):
-        yield token_list[i:i+n]
+def get_ngrams(tokens, n=2):
+    for i in range(len(tokens) - n + 1):
+        yield tokens[i:i+n]
 
 
 def validate_stemmer(stemmer):
