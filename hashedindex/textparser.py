@@ -30,10 +30,10 @@ for char in _punctuation_exceptions:
     _punctuation = _punctuation.replace(char, '')
 
 _punctuation_class = '[%s]' % re.escape(_punctuation)
-_token_class = '[A-z0-9%s]' % re.escape(_punctuation_exceptions)
+_character_class = '[A-z0-9%s]' % re.escape(_punctuation_exceptions)
 
 _re_punctuation = re.compile(_punctuation_class)
-_re_token = re.compile(r'%s+|%s' % (_token_class, _punctuation_class))
+_re_token = re.compile(r'%s+|%s' % (_character_class, _punctuation_class))
 
 _url_pattern = (
     r'(https?:\/\/)?(([\da-z-]+)\.){1,2}.([a-z\.]{2,6})(/[\/\w \.-]*)*\/?(\?(\w+=\w+&?)+)?'
