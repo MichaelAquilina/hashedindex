@@ -70,14 +70,14 @@ class IsNumericTestCase(unittest.TestCase):
 
 class GetNGramsTestCase(unittest.TestCase):
 
-    def test_bigram_tokens(self):
+    def test_bigram_token_list(self):
         assert list(textparser.get_ngrams(
-            tokens=iter(['one', 'two', 'three', 'four']),
+            token_list=['one', 'two', 'three', 'four'],
         )) == [['one', 'two'], ['two', 'three'], ['three', 'four']]
 
-    def test_trigram_tokens(self):
+    def test_trigram_token_list(self):
         assert list(textparser.get_ngrams(
-            tokens=iter(['one', 'two', 'three', 'four']),
+            token_list=['one', 'two', 'three', 'four'],
             n=3,
         )) == [
             ['one', 'two', 'three'],
