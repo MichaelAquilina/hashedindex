@@ -77,6 +77,12 @@ def word_tokenize(text, stopwords=_stopwords, ngrams=None, min_length=0, ignore_
     the given text. Tokens are assumed to be divided by any form of
     whitespace character.  A stemmer may optionally be provided, which will
     apply a transformation to each token.
+
+    The tokenizer ignores numeric tokens by default; the ignore_numeric
+    parameter can be set to False to include them in the output stream.
+
+    Generated tokens are lowercased by default; the retain_casing flag can
+    be set to True to retain upper/lower casing from the original text.
     """
     if ngrams is None:
         ngrams = 1
