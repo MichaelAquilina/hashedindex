@@ -143,6 +143,12 @@ class WordTokenizeTestCase(unittest.TestCase):
             ngrams=2,
         )) == [('foo', 'bar'), ('bar', 'bomb'), ('bomb', 'blar')]
 
+    def test_ngram_unsatisfiable(self):
+        assert list(textparser.word_tokenize(
+            text='foo bar',
+            ngrams=3,
+        )) == []
+
     def test_stemming(self):
         assert list(textparser.word_tokenize(
             text='one examples',
