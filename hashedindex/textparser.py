@@ -99,6 +99,9 @@ def word_tokenize(text, stopwords=_stopwords, ngrams=None, min_length=0, ignore_
 
     Generated tokens are lowercased by default; the retain_casing flag can
     be set to True to retain upper/lower casing from the original text.
+
+    Whitespace tokens are omitted by default; the tokenize_whitespace flag can
+    be set to True to include whitespace tokens in the output stream.
     """
     if ngrams is None:
         ngrams = 1
