@@ -156,9 +156,9 @@ class WordTokenizeTestCase(unittest.TestCase):
 
     def test_retains_punctuation(self):
         assert list(textparser.word_tokenize(
-            text='who, where? (question)',
+            text='who, where? (question!)',
             retain_punctuation=True
-        )) == [('who', ), (',', ), ('where',), ('?', ), ('(',), ('question',), (')',)]
+        )) == [('who', ), (',', ), ('where',), ('?', ), ('(',), ('question',), ('!',), (')',)]
 
     def test_ngrams(self):
         assert list(textparser.word_tokenize(
