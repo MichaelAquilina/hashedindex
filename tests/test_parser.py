@@ -107,7 +107,7 @@ class WordTokenizeTestCase(unittest.TestCase):
             text='first. second',
         )) == [('first', ), ('second', )]
 
-    def test_retain_inner_punctuation(self):
+    def test_inner_punctuation(self):
         assert list(textparser.word_tokenize(
             text='decision is a and/or b',
         )) == [('decision',), ('is',), ('a',), ('and/or',), ('b',)]
@@ -142,7 +142,7 @@ class WordTokenizeTestCase(unittest.TestCase):
             retain_punctuation=True
         )) == [('who', ), (',', ), ('where',), ('?', ), ('(',), ('question',), ('!',), (')',)]
 
-    def test_inner_punctuation(self):
+    def test_retains_punctuation_within_tokens(self):
         assert list(textparser.word_tokenize(
             text='is the oven pre-heated?',
             retain_punctuation=True
