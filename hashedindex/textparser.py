@@ -58,6 +58,10 @@ def normalize_unicode(text):
         return text
 
 
+def match_tokens(text):
+    return re.findall(_re_token, text)
+
+
 def get_ngrams(token_list, n=2):
     for i in range(len(token_list) - n + 1):
         yield token_list[i:i+n]
@@ -95,7 +99,7 @@ def word_tokenize(text, stopwords=_stopwords, ngrams=None, min_length=0, ignore_
     text = re.sub(_re_punctuation, '', text)
     text = text if retain_casing else text.lower()
 
-    matched_tokens = re.findall(_re_token, text)
+    matched_tokens = match_tokens(text)
     for tokens in get_ngrams(matched_tokens, ngrams):
         for i in range(len(tokens)):
             tokens[i] = tokens[i].strip(punctuation)
