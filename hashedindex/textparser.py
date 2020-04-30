@@ -68,11 +68,12 @@ def match_tokens(text, tokenize_whitespace):
 
 
 def get_ngrams(token_list, n=2):
-    ngram = []
     tokens = iter(token_list)
-    for _ in range(0, n):
-        token = next(tokens)
-        ngram.append(token)
+    try:
+        ngram = [next(tokens) for _ in range(0, n)]
+    except StopIteration:
+        return
+
     yield ngram
     for token in tokens:
         ngram = ngram[1:]
