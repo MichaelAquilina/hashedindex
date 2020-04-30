@@ -26,7 +26,8 @@ _accepted = frozenset(ascii_letters + digits + punctuation) - frozenset('\'')
 # Permit certain punctuation characters within tokens
 _punctuation_exceptions = '\\/-'
 _punctuation = copy(punctuation)
-_punctuation.strip(_punctuation_exceptions)
+for char in _punctuation_exceptions:
+    _punctuation = _punctuation.replace(char, '')
 
 _punctuation_class = '[%s]' % re.escape(_punctuation)
 _token_class = '[A-z0-9%s]' % re.escape(_punctuation_exceptions)
