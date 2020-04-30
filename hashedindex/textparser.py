@@ -28,8 +28,8 @@ _punctuation_exceptions = '\\/-'
 _punctuation = copy(punctuation)
 _punctuation.strip(_punctuation_exceptions)
 
-_token_class = '[A-z0-9%s]' % re.escape(_punctuation_exceptions)
 _punctuation_class = '[%s]' % re.escape(_punctuation)
+_token_class = '[A-z0-9%s]' % re.escape(_punctuation_exceptions)
 
 _re_punctuation = re.compile(_punctuation_class)
 _re_token = re.compile(r'%s+|%s' % (_token_class, _punctuation_class))
