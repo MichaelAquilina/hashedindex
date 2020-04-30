@@ -24,7 +24,7 @@ _stopwords = frozenset()
 _accepted = frozenset(ascii_letters + digits + punctuation) - frozenset('\'')
 
 # Permit certain punctuation characters within tokens
-_punctuation_exceptions = '\\/-'
+_punctuation_exceptions = r'\/-'
 _punctuation = copy(punctuation)
 for char in _punctuation_exceptions:
     _punctuation = _punctuation.replace(char, '')
