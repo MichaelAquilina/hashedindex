@@ -90,7 +90,7 @@ Take a look at the function's docstring for information on how to use ``stopword
 
 By default, ``word_tokenize`` omits whitespace from the output token stream; whitespaces are rarely useful to include in a document term index.
 
-If you need to perform processing on every token discovered in the text and then re-assemble an output with spacing that matches the input, you may enable the ``tokenize_whitespace`` setting.
+If you need to tokenize text and re-assemble an output with spacing that matches the input, you may enable the ``tokenize_whitespace`` setting.
 
 .. code-block:: python
 
