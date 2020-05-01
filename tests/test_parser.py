@@ -102,7 +102,7 @@ class WordTokenizeTestCase(unittest.TestCase):
             ('income', )
         ]
 
-    def test_splits_punctuation(self):
+    def test_strips_punctuation(self):
         assert list(textparser.word_tokenize(
             text='first. second',
         )) == [('first', ), ('second', )]
