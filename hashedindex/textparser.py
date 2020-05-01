@@ -23,10 +23,11 @@ class InvalidStemmerException(Exception):
 _stopwords = frozenset()
 _accepted = frozenset(ascii_letters + digits + punctuation) - frozenset('\'')
 
+# Permit certain punctuation characters within tokens
+_punctuation_exceptions = r'\/-'
 _punctuation = copy(punctuation)
-_punctuation = _punctuation.replace('\\', '')
-_punctuation = _punctuation.replace('/', '')
-_punctuation = _punctuation.replace('-', '')
+for char in _punctuation_exceptions:
+    _punctuation = _punctuation.replace(char, '')
 
 _re_punctuation = re.compile('[%s]' % re.escape(_punctuation))
 _re_token = re.compile(r'[A-z0-9]+')
