@@ -23,13 +23,17 @@ class InvalidStemmerException(Exception):
 _stopwords = frozenset()
 _accepted = frozenset(ascii_letters + digits + punctuation) - frozenset('\'')
 
+# Permit certain punctuation characters within tokens
+_punctuation_exceptions = r'\/-'
 _punctuation = copy(punctuation)
-_punctuation = _punctuation.replace('\\', '')
-_punctuation = _punctuation.replace('/', '')
-_punctuation = _punctuation.replace('-', '')
+for char in _punctuation_exceptions:
+    _punctuation = _punctuation.replace(char, '')
 
-_re_punctuation = re.compile('[%s]' % re.escape(_punctuation))
-_re_token = re.compile(r'[A-z0-9]+')
+_punctuation_class = '[%s]' % re.escape(_punctuation)
+_word_class = '[A-z0-9]+'
+
+_re_punctuation = re.compile(_punctuation_class)
+_re_token = re.compile('%s' % (_word_class))
 
 _url_pattern = (
     r'(https?:\/\/)?(([\da-z-]+)\.){1,2}.([a-z\.]{2,6})(/[\/\w \.-]*)*\/?(\?(\w+=\w+&?)+)?'
