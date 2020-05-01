@@ -86,7 +86,16 @@ Tokens are wrapped within tuples due to the ability to specify any number of n-g
    [(u'life', u'is'), (u'is', u'about'), (u'about', u'making'), (u'making', u'an'), (u'an', u'impact'),
     (u'impact', u'not'), (u'not', u'making'), (u'making', u'an'), (u'an', u'income')]
 
-Take a look at the function's docstring for information on how to use ``stopwords``, specify a ``min_length`` for tokens, and configure token output using the ``ignore_numeric``, ``retain_casing`` and ``tokenize_whitespace`` parameters.
+Take a look at the function's docstring for information on how to use ``stopwords``, specify a ``min_length`` for tokens, and configure token output using the ``ignore_numeric`` and ``retain_casing`` parameters.
+
+By default, ``word_tokenize`` omits whitespace from the output token stream; whitespaces are rarely useful to include in a search index.
+
+If you need to perform processing on every token discovered in the text and then re-assemble an output with spacing that matches the input, you may enable the ``tokenize_whitespace`` setting.
+
+.. code-block:: python
+
+    list(textparser.word_tokenize('Conventions.  May. Differ.', tokenize_whitespace=True))
+    [('conventions',), ('  ',), ('may',), (' ',), ('differ',)]
 
 Stemming
 --------
