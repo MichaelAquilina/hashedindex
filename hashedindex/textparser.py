@@ -78,8 +78,7 @@ def get_ngrams(token_list, n=2):
         return
 
     for token in tokens:
-        ngram = ngram[1:]
-        ngram.append(token)
+        ngram = ngram[1:] + [token]
         yield ngram
 
 
