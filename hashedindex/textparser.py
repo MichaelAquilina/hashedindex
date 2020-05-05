@@ -65,7 +65,7 @@ def normalize_unicode(text):
 
 def match_tokens(text, tokenize_whitespace):
     for token in re.findall(_re_token, text):
-        if token.strip() or tokenize_whitespace:
+        if tokenize_whitespace or not token.isspace():
             yield token
 
 
