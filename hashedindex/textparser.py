@@ -30,10 +30,10 @@ for char in _punctuation_exceptions:
     _punctuation = _punctuation.replace(char, '')
 
 _punctuation_class = '[%s]' % re.escape(_punctuation)
-_word_class = '[A-z0-9]+'
+_word_class = '[A-z0-9%s]+' % re.escape(_punctuation_exceptions)
 
 _re_punctuation = re.compile(_punctuation_class)
-_re_token = re.compile('%s' % (_word_class))
+_re_token = re.compile('%s|%s' % (_punctuation_class, _word_class))
 
 _url_pattern = (
     r'(https?:\/\/)?(([\da-z-]+)\.){1,2}.([a-z\.]{2,6})(/[\/\w \.-]*)*\/?(\?(\w+=\w+&?)+)?'
@@ -75,7 +75,7 @@ def validate_stemmer(stemmer):
 
 
 def word_tokenize(text, stopwords=_stopwords, ngrams=None, min_length=0, ignore_numeric=True,
-                  stemmer=None, retain_casing=False):
+                  stemmer=None, retain_casing=False, retain_punctuation=False):
     """
     Parses the given text and yields tokens which represent words within
     the given text. Tokens are assumed to be divided by any form of
@@ -87,6 +87,9 @@ def word_tokenize(text, stopwords=_stopwords, ngrams=None, min_length=0, ignore_
 
     Generated tokens are lowercased by default; the retain_casing flag can
     be set to True to retain upper/lower casing from the original text.
+
+    Punctuation characters are removed from the input text by default;
+    the retain_punctuation flag can be set to True to retain them.
     """
     if ngrams is None:
         ngrams = 1
@@ -96,15 +99,13 @@ def word_tokenize(text, stopwords=_stopwords, ngrams=None, min_length=0, ignore_
     validate_stemmer(stemmer)
 
     text = re.sub(re.compile('\'s'), '', text)  # Simple heuristic
-    text = re.sub(_re_punctuation, '', text)
+    text = text if retain_punctuation else re.sub(_re_punctuation, '', text)
     text = text if retain_casing else text.lower()
 
     matched_tokens = re.findall(_re_token, text)
     for tokens in get_ngrams(matched_tokens, ngrams):
         for i in range(len(tokens)):
-            tokens[i] = tokens[i].strip(punctuation)
             tokens[i] = stemmer.stem(tokens[i])
-
             if len(tokens[i]) < min_length or tokens[i] in stopwords:
                 break
             if ignore_numeric and isnumeric(tokens[i]):

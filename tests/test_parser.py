@@ -107,6 +107,11 @@ class WordTokenizeTestCase(unittest.TestCase):
             text='first. second',
         )) == [('first', ), ('second', )]
 
+    def test_inner_punctuation(self):
+        assert list(textparser.word_tokenize(
+            text='decision is a and/or b',
+        )) == [('decision',), ('is',), ('a',), ('and/or',), ('b',)]
+
     def test_ignores_stopwords(self):
         assert list(textparser.word_tokenize(
             text='The first rule of python is',
@@ -130,6 +135,18 @@ class WordTokenizeTestCase(unittest.TestCase):
             text='Three letter acronym (TLA)',
             retain_casing=True
         )) == [('Three', ), ('letter', ), ('acronym', ), ('TLA',)]
+
+    def test_retains_punctuation(self):
+        assert list(textparser.word_tokenize(
+            text='who, where? (question!)',
+            retain_punctuation=True
+        )) == [('who', ), (',', ), ('where',), ('?', ), ('(',), ('question',), ('!',), (')',)]
+
+    def test_retains_punctuation_within_tokens(self):
+        assert list(textparser.word_tokenize(
+            text='is the oven pre-heated?',
+            retain_punctuation=True
+        )) == [('is', ), ('the', ), ('oven',), ('pre-heated', ), ('?',)]
 
     def test_ngrams(self):
         assert list(textparser.word_tokenize(
