@@ -3,6 +3,11 @@
 History
 -------
 
+0.8.0 (2019-05-08)
+------------------
+* Add option to retain punctuation in ``word_tokenize`` (@jayadison)
+* Add option to include whitespace tokens in ``word_tokenize`` results (@jayadison)
+
 0.7.1 (2019-04-30)
 --------------------
 * Fix minor issue in history changelog
