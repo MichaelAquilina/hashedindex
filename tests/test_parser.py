@@ -172,6 +172,19 @@ class WordTokenizeTestCase(unittest.TestCase):
             tokenize_whitespace=True
         )) == [('around',), ('   ',), ('the',), (' ',), ('world', )]
 
+    def test_tokenize_punctuation_and_whitespace(self):
+        assert list(textparser.word_tokenize(
+            text='who, where, what, when, why?',
+            retain_punctuation=True,
+            tokenize_whitespace=True
+        )) == [
+            ('who',), (',',), (' ',),
+            ('where',), (',',), (' ',),
+            ('what',), (',',), (' ',),
+            ('when',), (',',), (' ',),
+            ('why',), ('?',),
+        ]
+
 
 class TestNullStemmer(unittest.TestCase):
     def test_repr(self):
