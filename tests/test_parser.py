@@ -154,11 +154,36 @@ class WordTokenizeTestCase(unittest.TestCase):
             ngrams=2,
         )) == [('foo', 'bar'), ('bar', 'bomb'), ('bomb', 'blar')]
 
+    def test_ngram_unsatisfiable(self):
+        assert list(textparser.word_tokenize(
+            text='foo bar',
+            ngrams=3,
+        )) == []
+
     def test_stemming(self):
         assert list(textparser.word_tokenize(
             text='one examples',
             stemmer=self.NaivePluralStemmer()
         )) == [('one',), ('example',)]
+
+    def test_tokenize_whitespace(self):
+        assert list(textparser.word_tokenize(
+            text='around   the world',
+            tokenize_whitespace=True
+        )) == [('around',), ('   ',), ('the',), (' ',), ('world', )]
+
+    def test_tokenize_punctuation_and_whitespace(self):
+        assert list(textparser.word_tokenize(
+            text='who, where, what, when, why?',
+            retain_punctuation=True,
+            tokenize_whitespace=True
+        )) == [
+            ('who',), (',',), (' ',),
+            ('where',), (',',), (' ',),
+            ('what',), (',',), (' ',),
+            ('when',), (',',), (' ',),
+            ('why',), ('?',),
+        ]
 
 
 class TestNullStemmer(unittest.TestCase):

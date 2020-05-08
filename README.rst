@@ -88,6 +88,15 @@ Tokens are wrapped within tuples due to the ability to specify any number of n-g
 
 Take a look at the function's docstring for information on how to use ``stopwords``, specify a ``min_length`` for tokens, and configure token output using the ``ignore_numeric``, ``retain_casing`` and ``retain_punctuation`` parameters.
 
+By default, ``word_tokenize`` omits whitespace from the output token stream; whitespaces are rarely useful to include in a document term index.
+
+If you need to tokenize text and re-assemble an output with spacing that matches the input, you may enable the ``tokenize_whitespace`` setting.
+
+.. code-block:: python
+
+    list(textparser.word_tokenize('Conventions.  May. Differ.', tokenize_whitespace=True))
+    [('conventions',), ('  ',), ('may',), (' ',), ('differ',)]
+
 Stemming
 --------
 
