@@ -31,10 +31,10 @@ for char in _punctuation_exceptions:
 
 _punctuation_class = '[%s]' % re.escape(_punctuation)
 _whitespace_class = r'\s+'
-_word_class = '[A-z0-9]+'
+_word_class = '[A-z0-9%s]+' % re.escape(_punctuation_exceptions)
 
 _re_punctuation = re.compile(_punctuation_class)
-_re_token = re.compile('%s|%s' % (_whitespace_class, _word_class))
+_re_token = re.compile('%s|%s|%s' % (_punctuation_class, _whitespace_class, _word_class))
 
 _url_pattern = (
     r'(https?:\/\/)?(([\da-z-]+)\.){1,2}.([a-z\.]{2,6})(/[\/\w \.-]*)*\/?(\?(\w+=\w+&?)+)?'
@@ -90,7 +90,8 @@ def validate_stemmer(stemmer):
 
 
 def word_tokenize(text, stopwords=_stopwords, ngrams=None, min_length=0, ignore_numeric=True,
-                  stemmer=None, retain_casing=False, tokenize_whitespace=False):
+                  stemmer=None, retain_casing=False, tokenize_whitespace=False,
+                  retain_punctuation=False):
     """
     Parses the given text and yields tokens which represent words within
     the given text. Tokens are assumed to be divided by any form of
@@ -105,6 +106,9 @@ def word_tokenize(text, stopwords=_stopwords, ngrams=None, min_length=0, ignore_
 
     Whitespace tokens are omitted by default; the tokenize_whitespace flag can
     be set to True to include whitespace tokens in the output stream.
+
+    Punctuation characters are removed from the input text by default;
+    the retain_punctuation flag can be set to True to retain them.
     """
     if ngrams is None:
         ngrams = 1
@@ -114,7 +118,7 @@ def word_tokenize(text, stopwords=_stopwords, ngrams=None, min_length=0, ignore_
     validate_stemmer(stemmer)
 
     text = re.sub(re.compile('\'s'), '', text)  # Simple heuristic
-    text = re.sub(_re_punctuation, '', text)
+    text = text if retain_punctuation else re.sub(_re_punctuation, '', text)
     text = text if retain_casing else text.lower()
 
     matched_tokens = match_tokens(text, tokenize_whitespace)
