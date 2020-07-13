@@ -148,6 +148,9 @@ class WordTokenizeTestCase(unittest.TestCase):
             retain_punctuation=True
         )) == [('is', ), ('the', ), ('oven',), ('pre-heated', ), ('?',)]
 
+    def test_retain_unicode_within_tokens(self):
+        assert list(textparser.word_tokenize('québec')) == [('québec',)]
+
     def test_ngrams(self):
         assert list(textparser.word_tokenize(
             text='foo bar bomb blar',
