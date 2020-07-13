@@ -3,7 +3,7 @@ import math
 import unicodedata
 
 from copy import copy
-from string import ascii_letters, digits, punctuation
+from string import punctuation
 
 
 # Stemmer interface which returns token unchanged
@@ -21,7 +21,6 @@ class InvalidStemmerException(Exception):
 
 
 _stopwords = frozenset()
-_accepted = frozenset(ascii_letters + digits + punctuation) - frozenset('\'')
 
 # Permit certain punctuation characters within tokens
 _punctuation_exceptions = r'\/-'
