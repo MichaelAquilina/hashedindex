@@ -31,7 +31,7 @@ for char in _punctuation_exceptions:
 
 _punctuation_class = '[%s]' % re.escape(_punctuation)
 _whitespace_class = r'\s+'
-_word_class = '[A-z0-9%s]+' % re.escape(_punctuation_exceptions)
+_word_class = r'[\w%s]+' % re.escape(_punctuation_exceptions)
 
 _re_punctuation = re.compile(_punctuation_class)
 _re_token = re.compile('%s|%s|%s' % (_punctuation_class, _whitespace_class, _word_class))
