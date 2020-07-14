@@ -199,14 +199,6 @@ class TestNullStemmer(unittest.TestCase):
         assert stemmer.stem('hello  ') == 'hello  '
 
 
-class NormalizeUnicode(unittest.TestCase):
-    def test_empty(self):
-        assert textparser.normalize_unicode('') == ''
-
-    def test_correct_output(self):
-        assert textparser.normalize_unicode('iäöü') == 'iaou'
-
-
 class IsUrlTestCase(unittest.TestCase):
 
     def test_http_url(self):

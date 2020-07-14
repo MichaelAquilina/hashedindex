@@ -1,6 +1,5 @@
 import re
 import math
-import unicodedata
 
 from copy import copy
 from string import punctuation
@@ -49,17 +48,6 @@ def tfidf(tf, df, corpus_size):
         return (1 + math.log(tf)) * math.log(corpus_size / df)
     else:
         return 0.0
-
-
-def normalize_unicode(text):
-    """
-    Normalize any unicode characters to ascii equivalent
-    https://docs.python.org/2/library/unicodedata.html#unicodedata.normalize
-    """
-    if isinstance(text, str):
-        return unicodedata.normalize('NFKD', text).encode('ascii', 'ignore').decode('utf8')
-    else:
-        return text
 
 
 def match_tokens(text, tokenize_whitespace):
