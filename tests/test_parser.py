@@ -148,6 +148,9 @@ class WordTokenizeTestCase(unittest.TestCase):
             retain_punctuation=True
         )) == [('is', ), ('the', ), ('oven',), ('pre-heated', ), ('?',)]
 
+    def test_retain_unicode_within_tokens(self):
+        assert list(textparser.word_tokenize('québec')) == [('québec',)]
+
     def test_ngrams(self):
         assert list(textparser.word_tokenize(
             text='foo bar bomb blar',
@@ -194,14 +197,6 @@ class TestNullStemmer(unittest.TestCase):
     def test_stem(self0):
         stemmer = textparser.NullStemmer()
         assert stemmer.stem('hello  ') == 'hello  '
-
-
-class NormalizeUnicode(unittest.TestCase):
-    def test_empty(self):
-        assert textparser.normalize_unicode('') == ''
-
-    def test_correct_output(self):
-        assert textparser.normalize_unicode('iäöü') == 'iaou'
 
 
 class IsUrlTestCase(unittest.TestCase):

@@ -1,9 +1,8 @@
 import re
 import math
-import unicodedata
 
 from copy import copy
-from string import ascii_letters, digits, punctuation
+from string import punctuation
 
 
 # Stemmer interface which returns token unchanged
@@ -21,7 +20,6 @@ class InvalidStemmerException(Exception):
 
 
 _stopwords = frozenset()
-_accepted = frozenset(ascii_letters + digits + punctuation) - frozenset('\'')
 
 # Permit certain punctuation characters within tokens
 _punctuation_exceptions = r'\/-'
@@ -31,7 +29,7 @@ for char in _punctuation_exceptions:
 
 _punctuation_class = '[%s]' % re.escape(_punctuation)
 _whitespace_class = r'\s+'
-_word_class = '[A-z0-9%s]+' % re.escape(_punctuation_exceptions)
+_word_class = r'[\w%s]+' % re.escape(_punctuation_exceptions)
 
 _re_punctuation = re.compile(_punctuation_class)
 _re_token = re.compile('%s|%s|%s' % (_punctuation_class, _whitespace_class, _word_class))
@@ -50,17 +48,6 @@ def tfidf(tf, df, corpus_size):
         return (1 + math.log(tf)) * math.log(corpus_size / df)
     else:
         return 0.0
-
-
-def normalize_unicode(text):
-    """
-    Normalize any unicode characters to ascii equivalent
-    https://docs.python.org/2/library/unicodedata.html#unicodedata.normalize
-    """
-    if isinstance(text, str):
-        return unicodedata.normalize('NFKD', text).encode('ascii', 'ignore').decode('utf8')
-    else:
-        return text
 
 
 def match_tokens(text, tokenize_whitespace):
