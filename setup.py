@@ -7,6 +7,9 @@ try:
 except ImportError:
     from distutils.core import setup
 
+from hashedindex import __version__
+
+
 with open('README.rst') as readme_file:
     readme = readme_file.read()
 
@@ -20,7 +23,7 @@ test_requirements = [
 
 setup(
     name='hashedindex',
-    version='0.8.0',
+    version=__version__,
     description="InvertedIndex implementation using hash lists (dictionaries)",
     long_description=readme + '\n\n' + history,
     author="Michael Aquilina",

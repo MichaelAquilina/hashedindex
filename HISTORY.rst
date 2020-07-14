@@ -3,6 +3,10 @@
 History
 -------
 
+0.9.0 (2020-07-14)
+------------------
+* support non-ascii characters during tokenization (@jayadison)
+
 0.8.0 (2019-05-08)
 ------------------
 * Add option to retain punctuation in ``word_tokenize`` (@jayadison)
