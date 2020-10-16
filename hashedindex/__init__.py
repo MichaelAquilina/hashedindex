@@ -63,9 +63,9 @@ class HashedIndex:
         """
         self._freeze = False
 
-    def add_term_occurrence(self, term, document):
+    def add_term_occurrence(self, term, document, count=1):
         """
-        Adds an occurrence of the term in the specified document.
+        Adds occurrence(s) (default: 1) of the term in the specified document.
         """
         if document not in self._documents:
             self._documents[document] = 0
@@ -79,8 +79,8 @@ class HashedIndex:
         if document not in self._terms[term]:
             self._terms[term][document] = 0
 
-        self._documents[document] += 1
-        self._terms[term][document] += 1
+        self._documents[document] += count
+        self._terms[term][document] += count
 
     def get_total_term_frequency(self, term):
         """
