@@ -19,18 +19,10 @@ class HashedIndexTest(unittest.TestCase):
 
     def setUp(self):
         self.index = hashedindex.HashedIndex()
-
-        for i in range(3):
-            self.index.add_term_occurrence('word', 'document1.txt')
-
-        for i in range(5):
-            self.index.add_term_occurrence('malta', 'document1.txt')
-
-        for i in range(4):
-            self.index.add_term_occurrence('phone', 'document2.txt')
-
-        for i in range(2):
-            self.index.add_term_occurrence('word', 'document2.txt')
+        self.index.add_term_occurrence('word', 'document1.txt', count=3)
+        self.index.add_term_occurrence('malta', 'document1.txt', count=5)
+        self.index.add_term_occurrence('phone', 'document2.txt', count=4)
+        self.index.add_term_occurrence('word', 'document2.txt', count=2)
 
     def test_repr(self):
         index = hashedindex.HashedIndex()
@@ -352,18 +344,10 @@ class HashedIndexTest(unittest.TestCase):
 class SerializationTest(unittest.TestCase):
     def setUp(self):
         self.index = hashedindex.HashedIndex()
-
-        for i in range(3):
-            self.index.add_term_occurrence('word', 'document1.txt')
-
-        for i in range(5):
-            self.index.add_term_occurrence('malta', 'document1.txt')
-
-        for i in range(4):
-            self.index.add_term_occurrence('phone', 'document2.txt')
-
-        for i in range(2):
-            self.index.add_term_occurrence('word', 'document2.txt')
+        self.index.add_term_occurrence('word', 'document1.txt', count=3)
+        self.index.add_term_occurrence('malta', 'document1.txt', count=5)
+        self.index.add_term_occurrence('phone', 'document2.txt', count=4)
+        self.index.add_term_occurrence('word', 'document2.txt', count=2)
 
     def test_to_dict(self):
         assert self.index.to_dict() == {
