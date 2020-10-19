@@ -3,6 +3,10 @@
 History
 -------
 
+0.10.0 (2020-10-19)
+-------------------
+* add `count` optional parameter to `add_term_occurrence` method (@jayadison)
+
 0.9.0 (2020-07-14)
 ------------------
 * support non-ascii characters during tokenization (@jayadison)
