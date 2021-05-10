@@ -11,6 +11,9 @@ class TfidfTestCase(unittest.TestCase):
     def test_zero_document_frequency(self):
         assert textparser.tfidf(tf=10, df=0, corpus_size=1) == 0
 
+    def test_nonzero_frequencies(self):
+        assert textparser.tfidf(tf=10, df=10, corpus_size=10) == 0
+
 
 class ValidateStemmerTestCase(unittest.TestCase):
 
